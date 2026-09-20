@@ -10,11 +10,12 @@ import {
   loadState,
   saveState,
 } from "../core/storage.js";
-import { renderFindings } from "../render/terminal.js";
+import { renderFindings, renderInterpretation } from "../render/terminal.js";
+import { interpretProject } from "./interpret.js";
 
 export async function cmdCheck(
   cwd: string,
-  opts: { json?: boolean } = {},
+  opts: { json?: boolean; ai?: boolean; prompt?: string } = {},
 ): Promise<number> {
   const root = path.resolve(cwd);
 
@@ -36,10 +37,21 @@ export async function cmdCheck(
     findingCount: findings.length,
   });
 
+  let interpretation;
+  if (opts.ai) {
+    try {
+      interpretation = await interpretProject(root, config, opts.prompt);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      return 1;
+    }
+  }
+
   if (opts.json) {
-    console.log(JSON.stringify({ findings, attention: state.attention }, null, 2));
+    console.log(JSON.stringify({ findings, attention: state.attention, interpretation: interpretation ? { ...interpretation.result, context: { filesIncluded: Object.keys(interpretation.context.files), excluded: interpretation.context.excluded } } : undefined }, null, 2));
   } else {
     process.stdout.write(renderFindings(findings));
+    if (interpretation) process.stdout.write(renderInterpretation(interpretation.result, interpretation.context));
   }
 
   return findings.some((f) => f.severity === "warning") ? 2 : 0;

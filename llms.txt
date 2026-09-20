@@ -74,6 +74,9 @@ fathom status
 - `fathom status`: reports current Work State, findings, and changed files.
 - `fathom diff`: summarizes Git changes by project area. Requires a Git repository.
 - `fathom check`: runs deterministic checks and exits with code 2 when warning findings exist.
+- `fathom check --ai`: runs deterministic checks, then explicitly adds interpretation using the active profile.
+- `fathom config show`: prints project configuration.
+- `fathom config set ai.profile <name>`: selects a named AI profile without storing its API key.
 - `fathom interpret --provider openai --consent`: explicitly sends filtered context to the configured provider for optional interpretation; requires `OPENAI_API_KEY`.
 
 Add `--json` to `status`, `diff`, or `check` for automation.
@@ -119,10 +122,10 @@ interface AIProvider {
 
 Providers must be opt-in, clearly label interpretation, preserve underlying evidence, require consent for remote context, and never receive secrets or `.env` values.
 
-The v0.2 CLI uses the OpenAI-compatible adapter:
+The v0.2 CLI uses the OpenAI-compatible adapter through the simpler check flow:
 
 ```bash
-OPENAI_API_KEY=your-key fathom interpret --provider openai --consent --json
+OPENAI_API_KEY=your-key fathom check --ai --json
 ```
 
 Optional `.fathom/config.json` policy:
@@ -132,6 +135,14 @@ Optional `.fathom/config.json` policy:
   "version": 1,
   "ignore": ["node_modules", "dist", ".git", ".fathom"],
   "ai": {
+    "profile": "work",
+    "profiles": {
+      "work": {
+        "provider": "openai",
+        "model": "gpt-4o-mini",
+        "apiKeyEnv": "OPENAI_API_KEY"
+      }
+    },
     "includePaths": ["README.md", "src/index.ts"],
     "maxFileBytes": 50000
   }

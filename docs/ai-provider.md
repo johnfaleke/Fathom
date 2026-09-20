@@ -72,26 +72,41 @@ explicit application decision.
 
 ## CLI usage
 
-Set the provider key, review the project's ignore and AI context policy, then
-request interpretation explicitly:
+Set the provider key, choose a profile, review the project's ignore and AI
+context policy, then request interpretation through the normal check flow:
 
 ```bash
-OPENAI_API_KEY=your-key fathom interpret \
-  --provider openai \
-  --consent \
-  --prompt "Summarize likely follow-up work" \
-  --json
+OPENAI_API_KEY=your-key fathom check --ai --json
 ```
 
 On PowerShell:
 
 ```powershell
 $env:OPENAI_API_KEY = "your-key"
-fathom interpret --provider openai --consent --json
+fathom config set ai.profile default
+fathom check --ai --json
 ```
 
 The command reports interpretation separately from deterministic findings. It
 does not write model text into the Work State schema or silently upload context.
+
+Profiles support multiple providers and custom OpenAI-compatible gateways:
+
+```bash
+fathom config set ai.profile work
+fathom config set ai.profiles.work.provider openai
+fathom config set ai.profiles.work.model gpt-4o-mini
+fathom config set ai.profiles.work.apiKeyEnv OPENAI_API_KEY
+
+fathom config set ai.profile local
+fathom config set ai.profiles.local.provider custom
+fathom config set ai.profiles.local.model local-model
+fathom config set ai.profiles.local.baseUrl http://localhost:9000/v1
+fathom config set ai.profiles.local.apiKeyEnv LOCAL_AI_KEY
+```
+
+Use `fathom config show` to inspect profile metadata. API keys are resolved from
+the configured environment variable and are never stored in project config.
 
 ## Safe context filtering
 

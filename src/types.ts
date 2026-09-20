@@ -61,8 +61,18 @@ export interface FathomConfig {
   version: 1;
   ignore: string[];
   ai?: {
+    enabled?: boolean;
+    profile?: string;
     includePaths?: string[];
     maxFileBytes?: number;
+    profiles?: Record<string, {
+      provider: "openai" | "custom";
+      model: string;
+      baseUrl?: string;
+      apiKeyEnv?: string;
+      includePaths?: string[];
+      maxFileBytes?: number;
+    }>;
   };
 }
 

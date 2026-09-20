@@ -81,20 +81,35 @@ npm run fathom -- diff --json
 Optional AI interpretation is explicit and requires consent:
 
 ```bash
-set OPENAI_API_KEY=your-key
-npm run fathom -- interpret --provider openai --consent --prompt "Summarize likely follow-up work" --json
+export OPENAI_API_KEY=your-key
+fathom config set ai.profile default
+fathom check --ai --json
 ```
 
-The published CLI uses the same command:
+For PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "your-key"
+fathom config set ai.profile default
+fathom check --ai
+```
+
+`check --ai` runs deterministic checks first, then adds one clearly labelled
+interpretation using the active profile. It does not silently send anything.
+The lower-level `fathom interpret` command remains available for custom prompts.
+
+Multiple profiles and custom OpenAI-compatible endpoints are supported:
 
 ```bash
-fathom interpret --provider openai --consent
+fathom config set ai.profile local
+fathom config set ai.profiles.local.provider custom
+fathom config set ai.profiles.local.model local-model
+fathom config set ai.profiles.local.baseUrl http://localhost:9000/v1
+fathom config set ai.profiles.local.apiKeyEnv LOCAL_AI_KEY
 ```
 
-Interpretation sends only filtered context, requires `OPENAI_API_KEY`, and never
-runs automatically as part of `check`, `status`, or `diff`. Configure optional
-file filtering in `.fathom/config.json` with `ai.includePaths` and
-`ai.maxFileBytes`.
+Keys stay in environment variables such as `OPENAI_API_KEY` or `LOCAL_AI_KEY`;
+they are never written to `.fathom/config.json`.
 
 After building:
 

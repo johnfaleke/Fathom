@@ -4,6 +4,7 @@ import { cmdCheck } from "./commands/check.js";
 import { cmdStatus } from "./commands/status.js";
 import { cmdDiff } from "./commands/diff.js";
 import { cmdInterpret } from "./commands/interpret.js";
+import { cmdConfig } from "./commands/config.js";
 
 const VERSION = "0.1.0";
 
@@ -22,6 +23,9 @@ Commands:
   status [--json]                 Where does the project actually stand?
   diff [--json]                   What meaningfully changed (git-backed in v0.1)
   check [--json]                  Find inconsistencies and forgotten wiring
+  check --ai [--json]             Add opt-in provider interpretation
+  config show                     Show local configuration
+  config set <key> <value>        Update AI profile configuration
   interpret --provider openai
                                   Opt-in AI interpretation with explicit consent
 
@@ -71,7 +75,14 @@ async function main(): Promise<void> {
       process.exitCode = await cmdDiff(process.cwd(), { json });
       break;
     case "check":
-      process.exitCode = await cmdCheck(process.cwd(), { json });
+      process.exitCode = await cmdCheck(process.cwd(), {
+        json,
+        ai: args.includes("--ai"),
+        prompt: parseOption(args.slice(1), "--prompt"),
+      });
+      break;
+    case "config":
+      process.exitCode = await cmdConfig(process.cwd(), args.slice(1));
       break;
     case "interpret":
       process.exitCode = await cmdInterpret(process.cwd(), {
