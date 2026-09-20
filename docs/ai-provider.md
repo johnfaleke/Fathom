@@ -70,6 +70,29 @@ The adapter is a library surface in v0.2. It is not called automatically by
 `fathom check`, `fathom status`, or `fathom diff`; interpretation must be an
 explicit application decision.
 
+## CLI usage
+
+Set the provider key, review the project's ignore and AI context policy, then
+request interpretation explicitly:
+
+```bash
+OPENAI_API_KEY=your-key fathom interpret \
+  --provider openai \
+  --consent \
+  --prompt "Summarize likely follow-up work" \
+  --json
+```
+
+On PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "your-key"
+fathom interpret --provider openai --consent --json
+```
+
+The command reports interpretation separately from deterministic findings. It
+does not write model text into the Work State schema or silently upload context.
+
 ## Safe context filtering
 
 ```ts

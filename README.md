@@ -78,6 +78,24 @@ npm run fathom -- diff
 npm run fathom -- diff --json
 ```
 
+Optional AI interpretation is explicit and requires consent:
+
+```bash
+set OPENAI_API_KEY=your-key
+npm run fathom -- interpret --provider openai --consent --prompt "Summarize likely follow-up work" --json
+```
+
+The published CLI uses the same command:
+
+```bash
+fathom interpret --provider openai --consent
+```
+
+Interpretation sends only filtered context, requires `OPENAI_API_KEY`, and never
+runs automatically as part of `check`, `status`, or `diff`. Configure optional
+file filtering in `.fathom/config.json` with `ai.includePaths` and
+`ai.maxFileBytes`.
+
 After building:
 
 ```bash

@@ -3,6 +3,7 @@ import { cmdInit } from "./commands/init.js";
 import { cmdCheck } from "./commands/check.js";
 import { cmdStatus } from "./commands/status.js";
 import { cmdDiff } from "./commands/diff.js";
+import { cmdInterpret } from "./commands/interpret.js";
 
 const VERSION = "0.1.0";
 
@@ -21,6 +22,8 @@ Commands:
   status [--json]                 Where does the project actually stand?
   diff [--json]                   What meaningfully changed (git-backed in v0.1)
   check [--json]                  Find inconsistencies and forgotten wiring
+  interpret --provider openai
+                                  Opt-in AI interpretation with explicit consent
 
 Options:
   -h, --help        Show help
@@ -69,6 +72,14 @@ async function main(): Promise<void> {
       break;
     case "check":
       process.exitCode = await cmdCheck(process.cwd(), { json });
+      break;
+    case "interpret":
+      process.exitCode = await cmdInterpret(process.cwd(), {
+        json,
+        provider: parseOption(args.slice(1), "--provider"),
+        prompt: parseOption(args.slice(1), "--prompt"),
+        consent: args.includes("--consent"),
+      });
       break;
     default:
       console.error(`Unknown command: ${command}`);
@@ -130,6 +141,12 @@ function splitList(value: string): string[] {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function parseOption(args: string[], option: string): string | undefined {
+  const index = args.indexOf(option);
+  const value = index >= 0 ? args[index + 1] : undefined;
+  return value && !value.startsWith("--") ? value : undefined;
 }
 
 main().catch((err: unknown) => {

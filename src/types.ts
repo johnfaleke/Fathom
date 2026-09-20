@@ -60,6 +60,10 @@ export interface WorkStateSnapshot extends WorkState {
 export interface FathomConfig {
   version: 1;
   ignore: string[];
+  ai?: {
+    includePaths?: string[];
+    maxFileBytes?: number;
+  };
 }
 
 export interface WorkStateSummary {

@@ -1,4 +1,25 @@
+import type { AIInterpretationResult } from "../ai/provider.js";
+import type { SafeAIContext } from "../ai/context.js";
 import type { Finding, WorkState } from "../types.js";
+
+export function renderInterpretation(result: AIInterpretationResult, context: SafeAIContext): string {
+  const lines = [
+    "FATHOM INTERPRETATION",
+    "",
+    `Provider: ${result.provider}`,
+    `Confidence: ${Math.round(result.confidence * 100)}%`,
+    "",
+    result.summary,
+    "",
+  ];
+  if (result.notes.length) {
+    lines.push("Notes:");
+    for (const note of result.notes) lines.push(`  • ${note}`);
+    lines.push("");
+  }
+  lines.push(`Context: ${Object.keys(context.files).length} included, ${context.excluded.length} excluded`);
+  return lines.join("\n") + "\n";
+}
 
 export function renderFindings(findings: Finding[]): string {
   if (findings.length === 0) {
