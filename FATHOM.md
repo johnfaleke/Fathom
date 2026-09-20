@@ -497,9 +497,13 @@ useful on its own.
 
 ### v0.2 — Interpretation, carefully
 
-- Opt-in LLM provider interface with a single supported provider
-- Interpretation findings that always carry their evidence
+- Opt-in OpenAI-compatible provider interface
+- Named profiles for OpenAI and custom-compatible endpoints
+- Guided setup without storing API keys in project config
+- `fathom check --ai` with explicit consent and separate interpretation output
+- Interpretation results that always carry their evidence
 - Explicit, inspectable file filtering for anything sent to a model
+- Versioned Project Model with observations, evidence, and claims
 
 ### v0.3 — Automation surfaces
 

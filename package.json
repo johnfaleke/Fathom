@@ -1,6 +1,6 @@
 {
   "name": "@johnfaleke/fathom",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Understand the work. Local-first project Work State with evidence.",
   "type": "module",
   "repository": {
