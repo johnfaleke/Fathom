@@ -14,6 +14,8 @@ export { WORK_STATE_VERSION } from "./types.js";
 export { builtinChecks } from "./checks/index.js";
 export { runChecks } from "./core/runner.js";
 export { createProjectContext } from "./core/project.js";
+export { collectSafeAIContext } from "./ai/context.js";
+export type { AIContextPolicy, SafeAIContext } from "./ai/context.js";
 export type {
   AIInterpretationRequest,
   AIInterpretationResult,
