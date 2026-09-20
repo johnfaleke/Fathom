@@ -74,6 +74,11 @@ test("custom OpenAI-compatible profiles retain their provider identity", () => {
   assert.equal(provider.name, "Custom OpenAI-compatible provider");
 });
 
+test("provider rejects malformed or credential-bearing base URLs", () => {
+  assert.throws(() => new OpenAIProvider({ apiKey: "test-key", model: "test-model", baseUrl: "file:///tmp/provider" }), /http\(s\) URL/);
+  assert.throws(() => new OpenAIProvider({ apiKey: "test-key", model: "test-model", baseUrl: "https://user:pass@example.test/v1" }), /embedded credentials/);
+});
+
 async function readRequest(request: import("node:http").IncomingMessage): Promise<string> {
   const chunks: Buffer[] = [];
   for await (const chunk of request) chunks.push(Buffer.from(chunk));

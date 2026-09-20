@@ -2,7 +2,7 @@
 
 > AI can generate the work. Fathom helps you understand the work.
 
-Current release: 0.2.0.
+Current release: 0.2.1.
 
 Fathom is an open-source, local-first CLI for project Work State. It reads observable repository evidence and reports what is in progress, what is complete, what changed, and what may be silently broken.
 

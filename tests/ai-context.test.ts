@@ -56,3 +56,23 @@ test("safe AI context supports an explicit file allowlist", async () => {
   assert.deepEqual(result.files, { "README.md": "Project notes" });
   assert.deepEqual(result.excluded, [{ path: "src/app.ts", reason: "not-allowed" }]);
 });
+
+test("safe AI context redacts secrets embedded in otherwise safe files", async () => {
+  const ctx: ProjectContext = {
+    root: "/fixture",
+    fathomDir: "/fixture/.fathom",
+    files: ["config.json"],
+    async readText() {
+      return '{"apiKey":"live-key","authorization":"Bearer live-token"}';
+    },
+    async exists() {
+      return true;
+    },
+  };
+
+  const result = await collectSafeAIContext(ctx);
+
+  assert.equal(result.files["config.json"].includes("live-key"), false);
+  assert.equal(result.files["config.json"].includes("live-token"), false);
+  assert.match(result.files["config.json"], /REDACTED/);
+});

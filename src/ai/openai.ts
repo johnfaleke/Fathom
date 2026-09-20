@@ -30,7 +30,11 @@ export class OpenAIProvider implements AIProvider {
     if (!options.model.trim()) throw new Error("OpenAI model is required");
     this.apiKey = options.apiKey;
     this.model = options.model;
-    this.baseUrl = (options.baseUrl ?? "https://api.openai.com/v1").replace(/\/$/, "");
+    const baseUrl = new URL(options.baseUrl ?? "https://api.openai.com/v1");
+    if (!['http:', 'https:'].includes(baseUrl.protocol) || baseUrl.username || baseUrl.password) {
+      throw new Error("Provider base URL must be an http(s) URL without embedded credentials");
+    }
+    this.baseUrl = baseUrl.toString().replace(/\/$/, "");
     this.type = options.providerType ?? "openai";
     this.id = this.type;
     this.name = this.type === "custom" ? "Custom OpenAI-compatible provider" : "OpenAI";

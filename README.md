@@ -4,7 +4,7 @@
 
 Fathom is a local-first CLI for project Work State. It gives developers a deterministic, evidence-backed view of what is happening in a repo: what is in progress, what has been completed, what changed, and what may be silently broken.
 
-Current release: `0.2.0` — Project Model and opt-in AI interpretation.
+Current release: `0.2.1` — Project Model and opt-in AI interpretation.
 
 ## Why Fathom exists
 
