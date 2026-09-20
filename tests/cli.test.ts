@@ -47,8 +47,8 @@ test("CLI init creates a default .env.example scaffold", async () => {
   assert.equal(exists, true);
 });
 
-test("CLI status can persist current work and task state", async () => {
-  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-status-"));
+test("CLI set updates current work and task state", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-set-"));
 
   await execFileAsync(process.execPath, [cliPath, "init"], {
     cwd: tempDir,
@@ -59,7 +59,7 @@ test("CLI status can persist current work and task state", async () => {
     process.execPath,
     [
       cliPath,
-      "status",
+      "set",
       "--current",
       "Ship OAuth integration",
       "--complete",

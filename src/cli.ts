@@ -15,10 +15,12 @@ Usage:
   fathom <command> [options]
 
 Commands:
-  init              Initialize Fathom in the current project
-  status [--json]   Where does the project actually stand?
-  diff [--json]     What meaningfully changed (git-backed in v0.1)
-  check [--json]    Find inconsistencies and forgotten wiring
+  init                            Initialize Fathom in the current project
+  set [--current <text>] [--complete <item>] [--incomplete <item>] 
+                                  Update the active work state
+  status [--json]                 Where does the project actually stand?
+  diff [--json]                   What meaningfully changed (git-backed in v0.1)
+  check [--json]                  Find inconsistencies and forgotten wiring
 
 Options:
   -h, --help        Show help
@@ -45,6 +47,14 @@ async function main(): Promise<void> {
   switch (command) {
     case "init":
       process.exitCode = await cmdInit(process.cwd());
+      break;
+    case "set":
+      process.exitCode = await cmdStatus(process.cwd(), {
+        json,
+        current: statusOptions.current,
+        completed: statusOptions.completed,
+        incomplete: statusOptions.incomplete,
+      });
       break;
     case "status":
       process.exitCode = await cmdStatus(process.cwd(), {
