@@ -1,3 +1,31 @@
+const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeLabel = document.querySelector("[data-theme-label]");
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+let storedTheme = null;
+try {
+  storedTheme = localStorage.getItem("fathom-theme");
+} catch {
+  storedTheme = null;
+}
+const initialTheme = storedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeToggle?.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
+  if (themeLabel) themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  if (themeMeta) themeMeta.setAttribute("content", theme === "dark" ? "#111514" : "#f4efe6");
+}
+
+applyTheme(initialTheme);
+themeToggle?.addEventListener("click", () => {
+  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  try {
+    localStorage.setItem("fathom-theme", nextTheme);
+  } catch {
+  }
+  applyTheme(nextTheme);
+});
+
 document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
     const original = button.textContent;
