@@ -15,6 +15,8 @@
   --surface-line: rgba(255, 255, 255, .15);
   --blue-soft: #cfdbff;
   --card-paper: #fffdf8;
+  --button-dark-bg: #171918;
+  --button-dark-text: #fffdf8;
   --mono: "DM Mono", monospace;
   --sans: "Space Grotesk", sans-serif;
 }
@@ -32,6 +34,8 @@
   --surface-line: rgba(238, 242, 233, .18);
   --blue-soft: #d9e3ff;
   --card-paper: #202925;
+  --button-dark-bg: #eef2e9;
+  --button-dark-text: #111514;
 }
 
 * { box-sizing: border-box; }
@@ -53,7 +57,7 @@ a { color: inherit; text-decoration: none; }
 .text-link { font-weight: 600; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 52px; padding: 0 20px; border: 1px solid var(--ink); font-weight: 600; font-size: 14px; transition: transform .2s ease, background .2s ease, color .2s ease; } .button-github { gap: 11px; } .button-github .github-icon { width: 18px; height: 18px; }
 .button:hover { transform: translateY(-3px); }
-.button-dark { background: var(--ink); color: var(--white); }
+.button-dark { background: var(--button-dark-bg); color: var(--button-dark-text); border-color: var(--button-dark-bg); }
 .button-dark:hover { background: var(--blue); border-color: var(--blue); }
 .button-outline { background: transparent; }
 .button-outline:hover { background: var(--white); }
