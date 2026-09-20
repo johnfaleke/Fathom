@@ -27,3 +27,25 @@ const sectionObserver = new IntersectionObserver(
 );
 
 sections.forEach((section) => sectionObserver.observe(section));
+
+const starTargets = document.querySelectorAll("[data-stars]");
+
+fetch("https://api.github.com/repos/johnfaleke/Fathom", {
+  headers: { Accept: "application/vnd.github+json" },
+})
+  .then((response) => {
+    if (!response.ok) throw new Error("GitHub API unavailable");
+    return response.json();
+  })
+  .then((repo) => {
+    const stars = Number(repo.stargazers_count);
+    const formattedStars = Number.isFinite(stars) ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(stars) : "—";
+    starTargets.forEach((target) => {
+      target.textContent = formattedStars;
+    });
+  })
+  .catch(() => {
+    starTargets.forEach((target) => {
+      target.textContent = "—";
+    });
+  });
