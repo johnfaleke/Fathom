@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Fathom is an open-source, local-first Work State CLI for understanding what actually happened in a codebase." />
+    <meta name="description" content="Fathom is an open-source, local-first Project Model CLI that turns repository evidence into understandable project reality." />
     <meta name="theme-color" content="#f4efe6" />
     <title>Fathom | Measure the work</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,9 +30,9 @@
       <section class="hero section-shell">
         <div class="hero-atmosphere" aria-hidden="true"><div class="atmosphere-grid"></div><div class="atmosphere-sweep"></div><div class="atmosphere-contour atmosphere-contour-one"></div><div class="atmosphere-contour atmosphere-contour-two"></div></div>
         <div class="hero-copy reveal">
-          <p class="eyebrow"><span class="eyebrow-dot"></span> Open source · local first · v0.1</p>
-          <h1>Measure the work.<br /><em>Understand the change.</em></h1>
-          <p class="hero-lede">AI can generate the work. Fathom helps you understand what actually happened, what is wired up, and what still needs your attention.</p>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Open source · local first · v0.2.1</p>
+          <h1>Measure reality.<br /><em>Understand the change.</em></h1>
+          <p class="hero-lede">Fathom builds an evidence-backed model of your project: what exists, what changed, what is wired up, and what still needs your attention.</p>
           <div class="hero-actions">
             <a class="button button-dark" href="#install">Get started <span aria-hidden="true">↓</span></a>
             <a class="button button-outline button-github" href="https://github.com/johnfaleke/Fathom" target="_blank" rel="noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.34-1.77-1.34-1.77-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.8 1.3 3.49.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.93 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.17 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.12 3.17.76.84 1.23 1.91 1.23 3.22 0 4.6-2.8 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z" /></svg> View source <span aria-hidden="true">↗</span></a>
@@ -50,26 +50,26 @@
             <div class="finding"><span class="finding-mark">!</span><div><strong>Configuration</strong><p>STRIPE_WEBHOOK_SECRET is used but missing from .env.example</p></div></div>
             <div class="finding finding-blue"><span class="finding-mark">→</span><div><strong>Evidence attached</strong><p>src/webhooks/stripe.ts · line 18</p></div></div>
           </div>
-          <div class="instrument-command"><span>$</span> fathom check <button class="copy-button" data-copy="fathom check" aria-label="Copy fathom check command">copy</button></div>
+          <div class="instrument-command"><span>$</span> fathom scan <button class="copy-button" data-copy="fathom scan" aria-label="Copy fathom scan command">copy</button></div>
         </div>
       </section>
 
       <section class="ticker" aria-label="Fathom principles">
-        <div class="ticker-track"><span>OBSERVABLE EVIDENCE</span><i>✳</i><span>WORK STATE</span><i>✳</i><span>LOCAL FIRST</span><i>✳</i><span>OPEN SOURCE</span><i>✳</i><span>OBSERVABLE EVIDENCE</span><i>✳</i><span>WORK STATE</span></div>
+        <div class="ticker-track"><span>OBSERVABLE EVIDENCE</span><i>✳</i><span>PROJECT MODEL</span><i>✳</i><span>LOCAL FIRST</span><i>✳</i><span>SAFE AI</span><i>✳</i><span>OPEN SOURCE</span><i>✳</i><span>OBSERVABLE EVIDENCE</span><i>✳</i><span>PROJECT MODEL</span></div>
       </section>
 
       <section id="why" class="section-shell section-pad">
         <div class="section-intro reveal"><p class="section-number">01 / THE SIGNAL</p><h2>Git tells you <span>what moved.</span><br />Fathom tells you what it means.</h2><p>Modern development produces change faster than humans can track it. Fathom takes a reading of the repository and turns scattered artifacts into a shared, inspectable picture of the work.</p></div>
         <div class="feature-grid">
           <article class="feature-card feature-card-dark reveal"><span class="feature-index">01</span><h3>Evidence before opinion</h3><p>Deterministic checks inspect your files, manifests, environment examples, and Git state. Every finding points back to what was observed.</p><a href="#checks">See the checks <span>→</span></a></article>
-          <article class="feature-card feature-card-blue reveal reveal-delay"><span class="feature-index">02</span><h3>One state for humans and agents</h3><p>Work State is a versioned JSON shape that tools can read, write, gate, and annotate. The terminal is only one view.</p><a href="#schema">Read the schema <span>→</span></a></article>
-          <article class="feature-card feature-card-paper reveal reveal-delay-2"><span class="feature-index">03</span><h3>Quiet when clean</h3><p>Run it at the end of a coding session. When nothing is broken, Fathom gets out of the way. When something is unwired, it gets specific.</p><a href="#install">Try it locally <span>→</span></a></article>
+          <article class="feature-card feature-card-blue reveal reveal-delay"><span class="feature-index">02</span><h3>Model before meaning</h3><p>Scan turns observations into evidence-backed claims about your stack, files, dependencies, and project reality.</p><a href="#model">Explore the model <span>→</span></a></article>
+          <article class="feature-card feature-card-paper reveal reveal-delay-2"><span class="feature-index">03</span><h3>AI only when invited</h3><p>Set up a provider once, keep keys outside the project, and choose exactly when filtered context can leave the machine.</p><a href="#ai">See the boundary <span>→</span></a></article>
         </div>
       </section>
 
       <section id="install" class="install-band">
         <div class="section-shell install-layout">
-          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Install once.<br /><em>Use it anywhere.</em></h2><p>Install the CLI on your machine, then run it from any project workspace. Initialize each project once; its state stays local in `.fathom/`.</p><div class="install-flow"><div><span>01</span><strong>Install globally</strong><small>Once per machine</small></div><div><span>02</span><strong>Enter a workspace</strong><small>Any repository</small></div><div><span>03</span><strong>Read the state</strong><small>Check, status, diff</small></div></div><a class="inline-link" href="#docs">Read the full guide <span>↘</span></a></div>
+          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Install once.<br /><em>Build the model.</em></h2><p>Install the CLI on your machine, then run it from any project workspace. Initialize each project once; its state stays local in `.fathom/`.</p><div class="install-flow"><div><span>01</span><strong>Install globally</strong><small>Once per machine</small></div><div><span>02</span><strong>Scan the workspace</strong><small>Evidence → claims</small></div><div><span>03</span><strong>Check what needs attention</strong><small>Local or AI-assisted</small></div></div><a class="inline-link" href="#docs">Read the full guide <span>↘</span></a></div>
           <div class="code-stack reveal reveal-delay">
             <div class="code-window"><div class="code-window-bar"><span class="window-dots">● ● ●</span><span>terminal</span></div><pre><code><span class="code-comment"># install once</span>
 <span class="code-command">npm install --global @johnfaleke/fathom</span>
@@ -77,22 +77,26 @@
 <span class="code-comment"># from any project you want to understand</span>
 <span class="code-command">cd /path/to/your-project</span>
 <span class="code-command">fathom init</span>
+<span class="code-command">fathom scan</span>
 <span class="code-command">fathom check</span>
 <span class="code-command">fathom status</span>
-<span class="code-command">fathom diff</span></code></pre><button class="copy-button copy-code" data-copy="npm install --global @johnfaleke/fathom&#10;cd /path/to/your-project&#10;fathom init&#10;fathom check&#10;fathom status&#10;fathom diff">copy</button></div>
+<span class="code-command">fathom diff</span>
+<span class="code-command">fathom setup</span>
+<span class="code-command">fathom check --ai</span></code></pre><button class="copy-button copy-code" data-copy="npm install --global @johnfaleke/fathom&#10;cd /path/to/your-project&#10;fathom init&#10;fathom scan&#10;fathom check&#10;fathom status&#10;fathom diff&#10;fathom setup&#10;fathom check --ai">copy</button></div>
             <p class="install-alternative"><strong>Pin it per project:</strong> <code>npm install --save-dev @johnfaleke/fathom</code> then use <code>npx fathom</code>.</p>
           </div>
         </div>
       </section>
 
       <section id="docs" class="section-shell section-pad docs-section">
-        <div class="section-intro reveal"><p class="section-number">03 / DOCUMENTATION</p><h2>A small CLI with a<br /><span>clear integration surface.</span></h2><p>Use the human output for a quick scan, or consume the JSON in CI, scripts, editor tooling, and future agents.</p></div>
+        <div class="section-intro reveal"><p class="section-number">03 / DOCUMENTATION</p><h2>A small CLI with a<br /><span>deeper model underneath.</span></h2><p>Use the human output for a quick scan, or consume the Project Model and JSON in scripts, CI, editor tooling, and future agents.</p></div>
         <div class="docs-columns">
-          <div class="docs-nav" aria-label="Documentation topics"><a class="docs-nav-link active" href="#commands"><span>01</span> Commands</a><a class="docs-nav-link" href="#checks"><span>02</span> Checks</a><a class="docs-nav-link" href="#schema"><span>03</span> Work State schema</a><a class="docs-nav-link" href="#integrate"><span>04</span> Integration</a></div>
+          <div class="docs-nav" aria-label="Documentation topics"><a class="docs-nav-link active" href="#commands"><span>01</span> Commands</a><a class="docs-nav-link" href="#checks"><span>02</span> Checks</a><a class="docs-nav-link" href="#model"><span>03</span> Project Model</a><a class="docs-nav-link" href="#ai"><span>04</span> Safe AI</a></div>
           <div class="docs-content">
-            <article id="commands" class="doc-block"><div><p class="doc-kicker">WORKSPACE LOOP</p><h3>Five commands. One useful loop.</h3></div><div class="command-list"><div><code>fathom init</code><span>Run once per workspace to create local state, config, events, and `.env.example`.</span></div><div><code>fathom set</code><span>Record current work and completed or incomplete tasks.</span></div><div><code>fathom check</code><span>Find missing wiring and exit nonzero when warnings need attention.</span></div><div><code>fathom status</code><span>Combine Work State, findings, and changed files in one view.</span></div><div><code>fathom diff</code><span>Summarize Git changes by project area.</span></div></div></article>
+            <article id="commands" class="doc-block"><div><p class="doc-kicker">WORKSPACE LOOP</p><h3>Scan first. Reason second.</h3></div><div class="command-list"><div><code>fathom init</code><span>Run once per workspace to create local state, config, events, and `.env.example`.</span></div><div><code>fathom scan</code><span>Build `.fathom/model.json` from files, manifests, observations, and claims.</span></div><div><code>fathom check</code><span>Find missing wiring locally and exit nonzero when warnings need attention.</span></div><div><code>fathom status</code><span>Combine Work State, findings, and changed files in one view.</span></div><div><code>fathom diff</code><span>Summarize Git changes by project area.</span></div></div></article>
             <article id="checks" class="doc-block"><div><p class="doc-kicker">DETERMINISTIC CHECKS</p><h3>Checks you can explain to a teammate.</h3></div><div class="check-list"><div class="check-item"><span class="check-icon">ENV</span><div><strong>config.env-var-missing</strong><p>Finds `process.env.X` usage without a matching entry in `.env.example`.</p></div></div><div class="check-item"><span class="check-icon">DEP</span><div><strong>deps.undeclared-import</strong><p>Finds imported packages missing from the project manifest.</p></div></div><div class="check-item"><span class="check-icon">API</span><div><strong>Public check interface</strong><p>Add a check by implementing `Check.run(ctx)` and returning evidence-backed findings.</p></div></div></div></article>
-            <article id="schema" class="doc-block"><div><p class="doc-kicker">MACHINE READABLE</p><h3>Make project state portable.</h3></div><div class="schema-card"><div class="schema-line"><span class="schema-key">"version"</span><span>1</span></div><div class="schema-line"><span class="schema-key">"currentWork"</span><span>"Ship the subscription flow"</span></div><div class="schema-line"><span class="schema-key">"completed"</span><span>[ WorkItem, ... ]</span></div><div class="schema-line"><span class="schema-key">"findings"</span><span>[ Finding, ... ]</span></div><div class="schema-line"><span class="schema-key">"attention"</span><span>1</span></div></div><a class="inline-link" href="../llms.txt">Open the text reference <span>↗</span></a></article>
+            <article id="model" class="doc-block"><div><p class="doc-kicker">PROJECT MODEL</p><h3>Observations become claims.</h3></div><div class="schema-card"><div class="schema-line"><span class="schema-key">"project.files"</span><span>184</span></div><div class="schema-line"><span class="schema-key">"project.stack"</span><span>[ TypeScript, React ]</span></div><div class="schema-line"><span class="schema-key">"observations"</span><span>[ Observation, ... ]</span></div><div class="schema-line"><span class="schema-key">"claims"</span><span>[ Claim, ... ]</span></div><div class="schema-line"><span class="schema-key">"evidence"</span><span>[ Evidence, ... ]</span></div></div><a class="inline-link" href="../llms.txt">Open the text reference <span>↗</span></a></article>
+            <article id="ai" class="doc-block"><div><p class="doc-kicker">SAFE AI</p><h3>Useful when invited.</h3></div><div class="check-list"><div class="check-item"><span class="check-icon">01</span><div><strong>fathom setup</strong><p>Choose a named provider profile without putting keys in the repository.</p></div></div><div class="check-item"><span class="check-icon">02</span><div><strong>fathom check --ai</strong><p>Explicitly sends filtered context; plain checks stay local.</p></div></div><div class="check-item"><span class="check-icon">03</span><div><strong>Evidence stays attached</strong><p>Interpretation is labelled, bounded, and never replaces deterministic findings.</p></div></div></div></article>
           </div>
         </div>
       </section>
