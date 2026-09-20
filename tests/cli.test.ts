@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -45,6 +45,43 @@ test("CLI init creates a default .env.example scaffold", async () => {
   const exists = await import("node:fs/promises").then((fs) => fs.access(envExample).then(() => true).catch(() => false));
 
   assert.equal(exists, true);
+});
+
+test("CLI status can persist current work and task state", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-status-"));
+
+  await execFileAsync(process.execPath, [cliPath, "init"], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  await execFileAsync(
+    process.execPath,
+    [
+      cliPath,
+      "status",
+      "--current",
+      "Ship OAuth integration",
+      "--complete",
+      "Login API",
+      "--incomplete",
+      "Webhook retry handling",
+    ],
+    { cwd: tempDir, env: process.env },
+  );
+
+  const statePath = path.join(tempDir, ".fathom", "state.json");
+  const state = JSON.parse(readFileSync(statePath, "utf8"));
+
+  assert.equal(state.currentWork, "Ship OAuth integration");
+  assert.deepEqual(
+    state.completed.map((item: { title: string }) => item.title),
+    ["Login API"],
+  );
+  assert.deepEqual(
+    state.incomplete.map((item: { title: string }) => item.title),
+    ["Webhook retry handling"],
+  );
 });
 
 test("CLI check reports missing env vars and undeclared imports", async () => {

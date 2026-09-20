@@ -11,11 +11,17 @@ import {
   loadState,
   saveState,
 } from "../core/storage.js";
+import type { WorkItem } from "../types.js";
 import { renderStatus } from "../render/terminal.js";
 
 export async function cmdStatus(
   cwd: string,
-  opts: { json?: boolean } = {},
+  opts: {
+    json?: boolean;
+    current?: string | null;
+    completed?: string[];
+    incomplete?: string[];
+  } = {},
 ): Promise<number> {
   const root = path.resolve(cwd);
 
@@ -31,6 +37,17 @@ export async function cmdStatus(
 
   let state = await loadState(root);
   state = applyFindings(state, findings);
+
+  if (opts.current !== undefined) {
+    state.currentWork = opts.current || null;
+  }
+  if (opts.completed) {
+    state.completed = mergeWorkItems(state.completed, opts.completed, "completed");
+  }
+  if (opts.incomplete) {
+    state.incomplete = mergeWorkItems(state.incomplete, opts.incomplete, "incomplete");
+  }
+
   state.changes = {
     filesChanged: changed.length,
     summary: changed.slice(0, 20).map((f) => `~ ${f}`),
@@ -50,4 +67,38 @@ export async function cmdStatus(
   }
 
   return 0;
+}
+
+function mergeWorkItems(
+  current: WorkItem[],
+  nextTitles: string[],
+  status: "completed" | "incomplete",
+): WorkItem[] {
+  const clean = nextTitles
+    .map((title) => title.trim())
+    .filter(Boolean);
+
+  const seen = new Set<string>();
+  const merged: WorkItem[] = [];
+
+  for (const item of current) {
+    const key = item.title.trim().toLowerCase();
+    if (!seen.has(key) && item.status === status) {
+      seen.add(key);
+      merged.push(item);
+    }
+  }
+
+  for (const title of clean) {
+    const key = title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push({
+      id: `${status}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      title,
+      status,
+    });
+  }
+
+  return merged;
 }
