@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Fathom is an open-source, local-first Work State CLI for understanding what actually happened in a codebase." />
+    <meta name="theme-color" content="#f4efe6" />
+    <title>Fathom | Measure the work</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="Fathom home"><span class="wordmark-mark">F</span> FATHOM</a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <a href="#why">Why Fathom</a>
+        <a href="#docs">Docs</a>
+        <a href="#integrate">Integrate</a>
+      </nav>
+      <div class="header-actions">
+        <a class="text-link" href="https://github.com/johnfaleke/Fathom" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        <a class="button button-small button-dark" href="https://github.com/sponsors/johnfaleke" target="_blank" rel="noreferrer">Support the work</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Open source · local first · v0.1</p>
+          <h1>Measure the work.<br /><em>Understand the change.</em></h1>
+          <p class="hero-lede">AI can generate the work. Fathom helps you understand what actually happened, what is wired up, and what still needs your attention.</p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#install">Get started <span aria-hidden="true">↓</span></a>
+            <a class="button button-outline" href="https://github.com/johnfaleke/Fathom" target="_blank" rel="noreferrer">View source <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="microcopy">No account. No cloud. No telemetry by default.</p>
+        </div>
+        <div class="hero-instrument reveal reveal-delay" aria-label="Example Fathom status output">
+          <div class="instrument-topline"><span>FATHOM / STATUS</span><span class="live-indicator">● LOCAL</span></div>
+          <div class="instrument-body">
+            <div class="instrument-title">Project sounding <span>↗</span></div>
+            <div class="instrument-row instrument-row-muted"><span>Current work</span><strong>Ship the subscription flow</strong></div>
+            <div class="instrument-row"><span>Completed</span><strong class="green">04</strong></div>
+            <div class="instrument-row"><span>Remaining</span><strong class="amber">02</strong></div>
+            <div class="instrument-rule"></div>
+            <div class="finding"><span class="finding-mark">!</span><div><strong>Configuration</strong><p>STRIPE_WEBHOOK_SECRET is used but missing from .env.example</p></div></div>
+            <div class="finding finding-blue"><span class="finding-mark">→</span><div><strong>Evidence attached</strong><p>src/webhooks/stripe.ts · line 18</p></div></div>
+          </div>
+          <div class="instrument-command"><span>$</span> fathom check <button class="copy-button" data-copy="fathom check" aria-label="Copy fathom check command">copy</button></div>
+        </div>
+      </section>
+
+      <section class="ticker" aria-label="Fathom principles">
+        <div class="ticker-track"><span>OBSERVABLE EVIDENCE</span><i>✳</i><span>WORK STATE</span><i>✳</i><span>LOCAL FIRST</span><i>✳</i><span>OPEN SOURCE</span><i>✳</i><span>OBSERVABLE EVIDENCE</span><i>✳</i><span>WORK STATE</span></div>
+      </section>
+
+      <section id="why" class="section-shell section-pad">
+        <div class="section-intro reveal"><p class="section-number">01 / THE SIGNAL</p><h2>Git tells you <span>what moved.</span><br />Fathom tells you what it means.</h2><p>Modern development produces change faster than humans can track it. Fathom takes a reading of the repository and turns scattered artifacts into a shared, inspectable picture of the work.</p></div>
+        <div class="feature-grid">
+          <article class="feature-card feature-card-dark reveal"><span class="feature-index">01</span><h3>Evidence before opinion</h3><p>Deterministic checks inspect your files, manifests, environment examples, and Git state. Every finding points back to what was observed.</p><a href="#checks">See the checks <span>→</span></a></article>
+          <article class="feature-card feature-card-blue reveal reveal-delay"><span class="feature-index">02</span><h3>One state for humans and agents</h3><p>Work State is a versioned JSON shape that tools can read, write, gate, and annotate. The terminal is only one view.</p><a href="#schema">Read the schema <span>→</span></a></article>
+          <article class="feature-card feature-card-paper reveal reveal-delay-2"><span class="feature-index">03</span><h3>Quiet when clean</h3><p>Run it at the end of a coding session. When nothing is broken, Fathom gets out of the way. When something is unwired, it gets specific.</p><a href="#install">Try it locally <span>→</span></a></article>
+        </div>
+      </section>
+
+      <section id="install" class="install-band">
+        <div class="section-shell install-layout">
+          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Install in a minute.<br /><em>Keep your project yours.</em></h2><p>Fathom runs from the project directory it is measuring. Its state stays in a local `.fathom/` folder, and the core works without an API key.</p><a class="inline-link" href="#docs">Read the full guide <span>↘</span></a></div>
+          <div class="code-stack reveal reveal-delay">
+            <div class="code-window"><div class="code-window-bar"><span class="window-dots">● ● ●</span><span>terminal</span></div><pre><code><span class="code-comment"># install once</span>
+<span class="code-command">npm install --global @johnfaleke/fathom</span>
+
+<span class="code-comment"># from any project you want to understand</span>
+<span class="code-command">cd /path/to/your-project</span>
+<span class="code-command">fathom init</span>
+<span class="code-command">fathom check</span>
+<span class="code-command">fathom status</span></code></pre><button class="copy-button copy-code" data-copy="npm install --global @johnfaleke/fathom&#10;cd /path/to/your-project&#10;fathom init&#10;fathom check&#10;fathom status">copy</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="docs" class="section-shell section-pad docs-section">
+        <div class="section-intro reveal"><p class="section-number">03 / DOCUMENTATION</p><h2>A small CLI with a<br /><span>clear integration surface.</span></h2><p>Use the human output for a quick scan, or consume the JSON in CI, scripts, editor tooling, and future agents.</p></div>
+        <div class="docs-columns">
+          <div class="docs-nav" aria-label="Documentation topics"><a class="docs-nav-link active" href="#commands"><span>01</span> Commands</a><a class="docs-nav-link" href="#checks"><span>02</span> Checks</a><a class="docs-nav-link" href="#schema"><span>03</span> Work State schema</a><a class="docs-nav-link" href="#integrate"><span>04</span> Integration</a></div>
+          <div class="docs-content">
+            <article id="commands" class="doc-block"><div><p class="doc-kicker">COMMANDS</p><h3>Five commands. One useful loop.</h3></div><div class="command-list"><div><code>fathom init</code><span>Initialize local state, config, event history, and `.env.example`.</span></div><div><code>fathom set</code><span>Record current work and completed or incomplete tasks.</span></div><div><code>fathom status</code><span>Combine Work State, findings, and changed files in one view.</span></div><div><code>fathom diff</code><span>Summarize Git changes by project area.</span></div><div><code>fathom check</code><span>Find missing wiring and exit nonzero when warnings need attention.</span></div></div></article>
+            <article id="checks" class="doc-block"><div><p class="doc-kicker">DETERMINISTIC CHECKS</p><h3>Checks you can explain to a teammate.</h3></div><div class="check-list"><div class="check-item"><span class="check-icon">ENV</span><div><strong>config.env-var-missing</strong><p>Finds `process.env.X` usage without a matching entry in `.env.example`.</p></div></div><div class="check-item"><span class="check-icon">DEP</span><div><strong>deps.undeclared-import</strong><p>Finds imported packages missing from the project manifest.</p></div></div><div class="check-item"><span class="check-icon">API</span><div><strong>Public check interface</strong><p>Add a check by implementing `Check.run(ctx)` and returning evidence-backed findings.</p></div></div></div></article>
+            <article id="schema" class="doc-block"><div><p class="doc-kicker">MACHINE READABLE</p><h3>Make project state portable.</h3></div><div class="schema-card"><div class="schema-line"><span class="schema-key">"version"</span><span>1</span></div><div class="schema-line"><span class="schema-key">"currentWork"</span><span>"Ship the subscription flow"</span></div><div class="schema-line"><span class="schema-key">"completed"</span><span>[ WorkItem, ... ]</span></div><div class="schema-line"><span class="schema-key">"findings"</span><span>[ Finding, ... ]</span></div><div class="schema-line"><span class="schema-key">"attention"</span><span>1</span></div></div><a class="inline-link" href="../llms.txt">Open the text reference <span>↗</span></a></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="integrate" class="integration-band">
+        <div class="section-shell integration-layout"><div class="integration-copy reveal"><p class="section-number">04 / BUILD ON IT</p><h2>Open by design.<br /><em>Useful before it is clever.</em></h2><p>The CLI is the first interface. The Work State schema and check contract are the invitation to build on top of it.</p><div class="integration-actions"><a class="button button-light" href="https://github.com/johnfaleke/Fathom" target="_blank" rel="noreferrer">Read the source <span>↗</span></a><a class="button button-ghost" href="https://github.com/johnfaleke/Fathom/issues" target="_blank" rel="noreferrer">Open an issue <span>↗</span></a></div></div><div class="integration-notes reveal reveal-delay"><div><span class="note-number">A</span><strong>CI ready</strong><p>Use `--json` and exit codes to gate or annotate changes.</p></div><div><span class="note-number">B</span><strong>Agent aware</strong><p>Agents can read and write Work State without owning the whole project story.</p></div><div><span class="note-number">C</span><strong>Privacy shaped</strong><p>Local by default. AI interpretation stays optional, explicit, and separate.</p></div></div></div>
+      </section>
+
+      <section class="closing section-shell"><p class="eyebrow"><span class="eyebrow-dot"></span> Take a sounding</p><h2>Know where the work<br /><em>really stands.</em></h2><div class="closing-actions"><a class="button button-dark" href="#install">Start locally <span>↓</span></a><a class="button button-outline" href="https://github.com/sponsors/johnfaleke" target="_blank" rel="noreferrer">Support Fathom <span>↗</span></a></div></section>
+    </main>
+
+    <footer class="site-footer section-shell"><a class="wordmark" href="#top"><span class="wordmark-mark">F</span> FATHOM</a><span>Open source project state for the age of generated code.</span><div><a href="../llms.txt">llms.txt</a><a href="https://github.com/johnfaleke/Fathom" target="_blank" rel="noreferrer">GitHub ↗</a></div></footer>
+    <script src="./app.js"></script>
+  </body>
+</html>

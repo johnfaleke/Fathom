@@ -115,7 +115,7 @@ test("CLI diff summarizes file changes by project area", async () => {
   });
 
   assert.match(stdout, /Source:/);
-  assert.match(stdout, /README:/i);
+  assert.match(stdout, /Docs:\s*README\.md/i);
   assert.match(stdout, /src\/app\.ts/);
 });
 

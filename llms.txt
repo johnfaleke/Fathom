@@ -1,0 +1,132 @@
+# Fathom
+
+> AI can generate the work. Fathom helps you understand the work.
+
+Fathom is an open-source, local-first CLI for project Work State. It reads observable repository evidence and reports what is in progress, what is complete, what changed, and what may be silently broken.
+
+## Canonical links
+
+- Repository: https://github.com/johnfaleke/Fathom
+- Issues: https://github.com/johnfaleke/Fathom/issues
+- Landing page: https://github.com/johnfaleke/Fathom/tree/main/site
+- License: MIT
+
+## Principles
+
+- Local-first: no account or backend is required.
+- Deterministic first: checks report evidence before any interpretation.
+- Evidence-backed: findings include a category, severity, message, and evidence.
+- Machine-readable: status, diff, and check support JSON output.
+- Privacy-aware: no telemetry by default; secrets and .env values should never be sent to an AI provider.
+- Open by design: Work State and the Check interface are public extension surfaces.
+
+## Install and run
+
+Install the published package globally:
+
+```bash
+npm install --global @johnfaleke/fathom
+```
+
+Then run it from any project workspace. The Fathom repository does not need to
+be present there:
+
+```bash
+cd /path/to/project
+fathom init
+fathom set --current "Ship OAuth" --complete "Login API" --incomplete "Webhook retry"
+fathom check
+fathom status
+fathom diff
+```
+
+For repository development, install dependencies and build from the Fathom repository:
+
+```bash
+npm install
+npm run build
+```
+
+To analyze another project without a global install, run the built CLI while that project is the current working directory:
+
+```bash
+node /path/to/Fathom/dist/cli.js init
+node /path/to/Fathom/dist/cli.js set --current "Ship OAuth" --complete "Login API" --incomplete "Webhook retry"
+node /path/to/Fathom/dist/cli.js check
+node /path/to/Fathom/dist/cli.js status
+node /path/to/Fathom/dist/cli.js diff
+```
+
+For local development, `npm link` from the Fathom directory exposes the `fathom` command globally:
+
+```bash
+npm link
+cd /path/to/project
+fathom init
+fathom check
+fathom status
+```
+
+## Commands
+
+- `fathom init`: creates `.fathom/` state, config, events, and `.env.example`.
+- `fathom set`: records current work and comma-separated completed or incomplete work items.
+- `fathom status`: reports current Work State, findings, and changed files.
+- `fathom diff`: summarizes Git changes by project area. Requires a Git repository.
+- `fathom check`: runs deterministic checks and exits with code 2 when warning findings exist.
+
+Add `--json` to `status`, `diff`, or `check` for automation.
+
+## Local files
+
+`.fathom/config.json` contains the version and explicit ignored directories. `.fathom/state.json` stores the current Work State. `.fathom/events.jsonl` stores append-only command observations. `.env.example` is the canonical environment reference used by the environment-variable check.
+
+## Built-in checks
+
+- `config.env-var-missing`: finds `process.env.X` usage without an entry in `.env.example`.
+- `deps.undeclared-import`: finds imported packages missing from `package.json`.
+
+## Work State shape
+
+A Work State has `version`, `updatedAt`, `root`, `currentWork`, `completed`, `incomplete`, `findings`, `changes`, and `attention`. Findings use stable IDs, categories, one of `info`, `warning`, or `potential` severity, a message, and an evidence array.
+
+## Extension interface
+
+A check implements:
+
+```ts
+interface Check {
+  id: string;
+  run(ctx: ProjectContext): Promise<Finding[]>;
+}
+```
+
+The public package exports `Check`, `Finding`, `Evidence`, `ProjectContext`, `WorkState`, `runChecks`, `createProjectContext`, and `builtinChecks`.
+
+## Optional AI provider interface
+
+AI interpretation is intentionally separate from deterministic evidence:
+
+```ts
+interface AIProvider {
+  id: string;
+  name: string;
+  type: "openai" | "anthropic" | "google" | "custom";
+  interpret(input: AIInterpretationRequest): Promise<AIInterpretationResult>;
+}
+```
+
+Providers must be opt-in, clearly label interpretation, preserve underlying evidence, require consent for remote context, and never receive secrets or `.env` values.
+
+## Contribution path
+
+1. Fork the repository.
+2. Add or improve a deterministic check.
+3. Include evidence in each finding.
+4. Add a focused test.
+5. Run `npm run build` and `npm test`.
+6. Open a pull request explaining the observable behavior.
+
+## Product status
+
+Fathom v0.1 is the deterministic core. MCP, editor integrations, broader check packs, and production AI providers are later roadmap work.

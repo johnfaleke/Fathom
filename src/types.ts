@@ -52,7 +52,20 @@ export interface WorkState {
   attention: number;
 }
 
+export interface WorkStateSnapshot extends WorkState {
+  schema: "fathom.work-state";
+  generatedBy: "fathom";
+}
+
 export interface FathomConfig {
   version: 1;
   ignore: string[];
+}
+
+export interface WorkStateSummary {
+  currentWork: string | null;
+  completed: WorkItem[];
+  incomplete: WorkItem[];
+  attention: number;
+  findingsCount: number;
 }
