@@ -76,22 +76,52 @@ export function renderStatus(state: WorkState): string {
 export function renderDiff(summary: string[], files: string[]): string {
   const lines: string[] = [`FATHOM DIFF`, ``];
 
-  if (files.length === 0 && summary.length === 0) {
+  const cleanFiles = files.filter((file) => !file.startsWith(".fathom/") && file !== ".env.example");
+
+  if (cleanFiles.length === 0 && summary.length === 0) {
     lines.push("No local changes detected.");
     return lines.join("\n") + "\n";
   }
 
-  lines.push("FILES");
-  for (const f of files.slice(0, 30)) lines.push(`~ ${f}`);
-  if (files.length > 30) lines.push(`… and ${files.length - 30} more`);
+  const groups = groupFilesByArea(cleanFiles);
+
+  if (groups.length > 0) {
+    lines.push("Project impact:");
+    for (const group of groups) {
+      lines.push(`  ${group.label}: ${group.items.join(", ")}`);
+    }
+    lines.push("");
+  }
+
+  lines.push("Files:");
+  for (const f of cleanFiles.slice(0, 30)) lines.push(`  ~ ${f}`);
+  if (cleanFiles.length > 30) lines.push(`  … and ${cleanFiles.length - 30} more`);
   lines.push("");
 
   if (summary.length) {
-    lines.push("GIT STAT");
-    for (const s of summary) lines.push(s);
+    lines.push("Git stat:");
+    for (const s of summary) lines.push(`  ${s}`);
   }
 
   return lines.join("\n") + "\n";
+}
+
+function groupFilesByArea(files: string[]): Array<{ label: string; items: string[] }> {
+  const buckets = new Map<string, string[]>();
+
+  for (const file of files) {
+    let label = "Other";
+    if (file.startsWith("src/")) label = "Source";
+    else if (file.startsWith("test") || file.includes("test")) label = "Tests";
+    else if (file.endsWith("README.md") || file.endsWith(".md")) label = "Docs";
+    else if (file.includes("config") || file.endsWith(".json") || file.endsWith(".yaml") || file.endsWith(".yml")) label = "Config";
+
+    const list = buckets.get(label) ?? [];
+    list.push(file);
+    buckets.set(label, list);
+  }
+
+  return [...buckets.entries()].map(([label, items]) => ({ label, items: items.slice(0, 3) }));
 }
 
 function titleCase(s: string): string {

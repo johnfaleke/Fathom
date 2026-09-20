@@ -84,6 +84,41 @@ test("CLI set updates current work and task state", async () => {
   );
 });
 
+test("CLI diff summarizes file changes by project area", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-diff-"));
+
+  const repoRoot = tempDir;
+  await execFileAsync("git", ["init"], { cwd: repoRoot, env: process.env });
+  await execFileAsync("git", ["config", "user.email", "test@example.com"], {
+    cwd: repoRoot,
+    env: process.env,
+  });
+  await execFileAsync("git", ["config", "user.name", "Test User"], {
+    cwd: repoRoot,
+    env: process.env,
+  });
+
+  writeFileSync(path.join(repoRoot, "package.json"), JSON.stringify({ name: "fixture-app" }, null, 2));
+  writeFileSync(path.join(repoRoot, "README.md"), "# Fixture\n");
+  mkdirSync(path.join(repoRoot, "src"), { recursive: true });
+  writeFileSync(path.join(repoRoot, "src", "app.ts"), "export const x = 1;\n");
+  await execFileAsync("git", ["add", "."], { cwd: repoRoot, env: process.env });
+  await execFileAsync("git", ["commit", "-m", "initial"], { cwd: repoRoot, env: process.env });
+
+  writeFileSync(path.join(repoRoot, "src", "app.ts"), "export const x = 2;\n");
+  writeFileSync(path.join(repoRoot, "README.md"), "# Fixture\nUpdated\n");
+
+  await execFileAsync(process.execPath, [cliPath, "init"], { cwd: repoRoot, env: process.env });
+  const { stdout } = await execFileAsync(process.execPath, [cliPath, "diff"], {
+    cwd: repoRoot,
+    env: process.env,
+  });
+
+  assert.match(stdout, /Source:/);
+  assert.match(stdout, /README:/i);
+  assert.match(stdout, /src\/app\.ts/);
+});
+
 test("CLI status prints a readable project summary", async () => {
   const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-status-summary-"));
 
