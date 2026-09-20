@@ -63,9 +63,9 @@ test("CLI set updates current work and task state", async () => {
       "--current",
       "Ship OAuth integration",
       "--complete",
-      "Login API",
+      "Login API, API docs",
       "--incomplete",
-      "Webhook retry handling",
+      "Webhook retry handling, Missing README",
     ],
     { cwd: tempDir, env: process.env },
   );
@@ -76,11 +76,11 @@ test("CLI set updates current work and task state", async () => {
   assert.equal(state.currentWork, "Ship OAuth integration");
   assert.deepEqual(
     state.completed.map((item: { title: string }) => item.title),
-    ["Login API"],
+    ["Login API", "API docs"],
   );
   assert.deepEqual(
     state.incomplete.map((item: { title: string }) => item.title),
-    ["Webhook retry handling"],
+    ["Webhook retry handling", "Missing README"],
   );
 });
 

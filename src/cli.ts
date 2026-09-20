@@ -107,7 +107,7 @@ function parseStatusOptions(args: string[]): {
     if (arg === "--complete") {
       const value = args[i + 1];
       if (value && !value.startsWith("--")) {
-        result.completed.push(value);
+        result.completed.push(...splitList(value));
         i += 1;
       }
       continue;
@@ -115,7 +115,7 @@ function parseStatusOptions(args: string[]): {
     if (arg === "--incomplete") {
       const value = args[i + 1];
       if (value && !value.startsWith("--")) {
-        result.incomplete.push(value);
+        result.incomplete.push(...splitList(value));
         i += 1;
       }
       continue;
@@ -123,6 +123,13 @@ function parseStatusOptions(args: string[]): {
   }
 
   return result;
+}
+
+function splitList(value: string): string[] {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 main().catch((err: unknown) => {
