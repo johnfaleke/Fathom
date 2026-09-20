@@ -84,6 +84,38 @@ test("CLI set updates current work and task state", async () => {
   );
 });
 
+test("CLI status prints a readable project summary", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-status-summary-"));
+
+  await execFileAsync(process.execPath, [cliPath, "init"], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  await execFileAsync(
+    process.execPath,
+    [
+      cliPath,
+      "set",
+      "--current",
+      "Ship OAuth integration",
+      "--complete",
+      "Login API",
+      "--incomplete",
+      "Webhook retry handling",
+    ],
+    { cwd: tempDir, env: process.env },
+  );
+
+  const { stdout } = await execFileAsync(process.execPath, [cliPath, "status"], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  assert.match(stdout, /Current work: Ship OAuth integration/);
+  assert.match(stdout, /Progress: 1 complete, 1 remaining/);
+});
+
 test("CLI check reports missing env vars and undeclared imports", async () => {
   const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-check-"));
   mkdirSync(path.join(tempDir, "src"), { recursive: true });

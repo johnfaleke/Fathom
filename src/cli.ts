@@ -79,15 +79,15 @@ async function main(): Promise<void> {
 
 function parseStatusOptions(args: string[]): {
   json: boolean;
-  current: string | null;
-  completed: string[];
-  incomplete: string[];
+  current?: string | null;
+  completed?: string[];
+  incomplete?: string[];
 } {
   const result = {
     json: false,
-    current: null as string | null,
-    completed: [] as string[],
-    incomplete: [] as string[],
+    current: undefined as string | null | undefined,
+    completed: undefined as string[] | undefined,
+    incomplete: undefined as string[] | undefined,
   };
 
   for (let i = 0; i < args.length; i += 1) {
@@ -107,7 +107,7 @@ function parseStatusOptions(args: string[]): {
     if (arg === "--complete") {
       const value = args[i + 1];
       if (value && !value.startsWith("--")) {
-        result.completed.push(...splitList(value));
+        result.completed = splitList(value);
         i += 1;
       }
       continue;
@@ -115,7 +115,7 @@ function parseStatusOptions(args: string[]): {
     if (arg === "--incomplete") {
       const value = args[i + 1];
       if (value && !value.startsWith("--")) {
-        result.incomplete.push(...splitList(value));
+        result.incomplete = splitList(value);
         i += 1;
       }
       continue;

@@ -32,42 +32,42 @@ export function renderStatus(state: WorkState): string {
   const lines: string[] = [
     `FATHOM STATUS`,
     ``,
-    `Current work`,
-    state.currentWork ?? "(not set)",
+    `Current work: ${state.currentWork ?? "(not set)"}`,
+    `Progress: ${state.completed.length} complete, ${state.incomplete.length} remaining`,
     ``,
   ];
 
   if (state.completed.length) {
-    lines.push("COMPLETED");
-    for (const item of state.completed) lines.push(`✓ ${item.title}`);
+    lines.push("Completed:");
+    for (const item of state.completed) lines.push(`  ✓ ${item.title}`);
     lines.push("");
   }
 
   if (state.incomplete.length) {
-    lines.push("INCOMPLETE");
-    for (const item of state.incomplete) lines.push(`⚠ ${item.title}`);
+    lines.push("Remaining:");
+    for (const item of state.incomplete) lines.push(`  • ${item.title}`);
     lines.push("");
   }
 
   if (state.findings.length) {
-    lines.push("FINDINGS");
+    lines.push("Findings:");
     for (const f of state.findings.slice(0, 10)) {
-      lines.push(`⚠ ${f.message}`);
+      lines.push(`  ⚠ ${f.message}`);
     }
     lines.push("");
   }
 
-  lines.push("CHANGES");
-  lines.push(`${state.changes.filesChanged} files`);
+  lines.push("Changes:");
+  lines.push(`  ${state.changes.filesChanged} file(s) changed`);
   for (const s of state.changes.summary.slice(0, 8)) {
-    lines.push(s);
+    lines.push(`  ${s}`);
   }
   lines.push("");
-  lines.push("ATTENTION");
+  lines.push("Attention:");
   lines.push(
     state.attention === 0
-      ? "Nothing needs review."
-      : `${state.attention} thing(s) are worth reviewing.`,
+      ? "  Nothing needs review."
+      : `  ${state.attention} thing(s) are worth reviewing.`,
   );
 
   return lines.join("\n") + "\n";

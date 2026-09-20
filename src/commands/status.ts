@@ -41,10 +41,10 @@ export async function cmdStatus(
   if (opts.current !== undefined) {
     state.currentWork = opts.current || null;
   }
-  if (opts.completed) {
+  if (opts.completed !== undefined) {
     state.completed = mergeWorkItems(state.completed, opts.completed, "completed");
   }
-  if (opts.incomplete) {
+  if (opts.incomplete !== undefined) {
     state.incomplete = mergeWorkItems(state.incomplete, opts.incomplete, "incomplete");
   }
 
