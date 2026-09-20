@@ -52,6 +52,24 @@ export interface AIProvider {
 - Use `includePaths` when a provider needs a narrow, inspectable file set.
 - Keep the `evidence` array attached to the interpretation result.
 
+## Supported adapter
+
+v0.2 includes an opt-in OpenAI-compatible adapter. It uses the user's API key,
+Node's built-in `fetch`, and the `/chat/completions` endpoint. The endpoint can be
+overridden for compatible gateways or local test fixtures.
+
+```ts
+const provider = new OpenAIProvider({
+  apiKey: process.env.OPENAI_API_KEY!,
+  model: "gpt-4o-mini",
+  baseUrl: "https://api.openai.com/v1",
+});
+```
+
+The adapter is a library surface in v0.2. It is not called automatically by
+`fathom check`, `fathom status`, or `fathom diff`; interpretation must be an
+explicit application decision.
+
 ## Safe context filtering
 
 ```ts

@@ -15,6 +15,8 @@ export { builtinChecks } from "./checks/index.js";
 export { runChecks } from "./core/runner.js";
 export { createProjectContext } from "./core/project.js";
 export { collectSafeAIContext } from "./ai/context.js";
+export { OpenAIProvider } from "./ai/openai.js";
+export type { OpenAIProviderOptions } from "./ai/openai.js";
 export type { AIContextPolicy, SafeAIContext } from "./ai/context.js";
 export type {
   AIInterpretationRequest,
