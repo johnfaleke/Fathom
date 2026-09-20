@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile, appendFile, access } from "node:fs/promises";
 import path from "node:path";
-import type { FathomConfig, Finding, WorkState } from "../types.js";
+import type { FathomConfig, Finding, ProjectModel, WorkState } from "../types.js";
 import { WORK_STATE_VERSION } from "../types.js";
 
 export const FATHOM_DIR = ".fathom";
@@ -12,6 +12,7 @@ export function fathomPaths(root: string) {
     state: path.join(dir, "state.json"),
     events: path.join(dir, "events.jsonl"),
     config: path.join(dir, "config.json"),
+    model: path.join(dir, "model.json"),
   };
 }
 
@@ -80,6 +81,15 @@ export async function loadConfig(root: string): Promise<FathomConfig> {
 export async function loadState(root: string): Promise<WorkState> {
   const raw = await readFile(fathomPaths(root).state, "utf8");
   return JSON.parse(raw) as WorkState;
+}
+
+export async function saveProjectModel(root: string, model: ProjectModel): Promise<void> {
+  await writeFile(fathomPaths(root).model, JSON.stringify(model, null, 2) + "\n", "utf8");
+}
+
+export async function loadProjectModel(root: string): Promise<ProjectModel> {
+  const raw = await readFile(fathomPaths(root).model, "utf8");
+  return JSON.parse(raw) as ProjectModel;
 }
 
 export async function saveState(root: string, state: WorkState): Promise<void> {

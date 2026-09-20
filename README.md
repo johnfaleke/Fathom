@@ -71,6 +71,18 @@ npm run fathom -- status
 npm run fathom -- status --json
 ```
 
+Build the local Project Model:
+
+```bash
+fathom scan
+fathom scan --json
+```
+
+`scan` reads repository evidence into `.fathom/model.json`: project identity,
+visible files, detected stack, dependencies, observations, and confidence-scored
+claims. Existing commands remain useful projections of the same project reality;
+AI interpretation is optional and never required to scan a project.
+
 See what meaningfully changed:
 
 ```bash

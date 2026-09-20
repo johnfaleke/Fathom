@@ -1,6 +1,7 @@
 /** Work State schema v0.1 — format first, CLI second. */
 
 export const WORK_STATE_VERSION = 1 as const;
+export const PROJECT_MODEL_VERSION = 1 as const;
 
 export type Severity = "info" | "warning" | "potential";
 
@@ -8,6 +9,37 @@ export interface Evidence {
   kind: string;
   path?: string;
   detail: string;
+}
+
+export interface Observation {
+  id: string;
+  kind: "file" | "manifest" | "dependency" | "configuration";
+  subject: string;
+  detail: string;
+  evidence: Evidence[];
+}
+
+export interface Claim {
+  id: string;
+  subject: string;
+  predicate: string;
+  object: string;
+  confidence: number;
+  evidence: Evidence[];
+}
+
+export interface ProjectModel {
+  version: typeof PROJECT_MODEL_VERSION;
+  generatedAt: string;
+  root: string;
+  project: {
+    name: string | null;
+    files: number;
+    stack: string[];
+    dependencies: string[];
+  };
+  observations: Observation[];
+  claims: Claim[];
 }
 
 export interface Finding {

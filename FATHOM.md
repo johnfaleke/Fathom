@@ -65,9 +65,32 @@ no longer lines up. No opinion, no guessing — just measurement against evidenc
 
 ---
 
-## The core primitive: Work State
+## The core primitive: Project Model
 
-The fundamental concept in Fathom is **Work State**.
+Fathom is evolving from a Work State file into an evidence-backed **Project Model**.
+The model is the durable representation of what Fathom can establish about a project;
+Work State, status, diff, and check are views over that model.
+
+The model progresses through explicit layers:
+
+```text
+Observations
+  ↓
+Evidence
+  ↓
+Claims
+  ↓
+Derived project state
+```
+
+Run `fathom scan` to build the local model. The result is stored in
+`.fathom/model.json` and can be inspected or consumed by integrations. A claim is a
+current, evidence-backed belief such as “this project uses TypeScript and React”; it
+is not presented as an unexplained model opinion.
+
+## Work State: a useful projection
+
+Work State remains the most useful operational view of the Project Model.
 
 A Work State is a machine-readable representation of the current state of a piece of
 software work. It combines observable project evidence with clearly-labelled,

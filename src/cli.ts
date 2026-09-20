@@ -6,6 +6,7 @@ import { cmdDiff } from "./commands/diff.js";
 import { cmdInterpret } from "./commands/interpret.js";
 import { cmdConfig } from "./commands/config.js";
 import { cmdSetup } from "./commands/setup.js";
+import { cmdScan } from "./commands/scan.js";
 
 const VERSION = "0.1.0";
 
@@ -28,6 +29,7 @@ Commands:
   config show                     Show local configuration
   config set <key> <value>        Update AI profile configuration
   setup                           Guided AI setup for this workspace
+  scan [--json]                   Build the local Project Model
   interpret --provider openai
                                   Opt-in AI interpretation with explicit consent
 
@@ -95,6 +97,9 @@ async function main(): Promise<void> {
         apiKeyEnv: parseOption(args.slice(1), "--api-key-env"),
         nonInteractive: args.includes("--non-interactive"),
       });
+      break;
+    case "scan":
+      process.exitCode = await cmdScan(process.cwd(), { json });
       break;
     case "interpret":
       process.exitCode = await cmdInterpret(process.cwd(), {

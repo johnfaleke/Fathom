@@ -73,6 +73,7 @@ fathom status
 - `fathom set`: records current work and comma-separated completed or incomplete work items.
 - `fathom status`: reports current Work State, findings, and changed files.
 - `fathom diff`: summarizes Git changes by project area. Requires a Git repository.
+- `fathom scan`: builds and persists the evidence-backed Project Model at `.fathom/model.json`.
 - `fathom check`: runs deterministic checks and exits with code 2 when warning findings exist.
 - `fathom check --ai`: runs deterministic checks, then explicitly adds interpretation using the active profile.
 - `fathom config show`: prints project configuration.
@@ -94,6 +95,10 @@ Add `--json` to `status`, `diff`, or `check` for automation.
 ## Work State shape
 
 A Work State has `version`, `updatedAt`, `root`, `currentWork`, `completed`, `incomplete`, `findings`, `changes`, and `attention`. Findings use stable IDs, categories, one of `info`, `warning`, or `potential` severity, a message, and an evidence array.
+
+## Project Model
+
+`fathom scan` produces a versioned Project Model with project identity, visible file count, detected stack, dependencies, observations, and claims. Claims have a subject, predicate, object, confidence, and evidence. The model is stored locally in `.fathom/model.json`; no API key is required.
 
 ## Extension interface
 
