@@ -33,6 +33,20 @@ test("CLI init creates Fathom state directory", async () => {
   assert.match(stdout, /Initialized Fathom/);
 });
 
+test("CLI init creates a default .env.example scaffold", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-env-"));
+
+  await execFileAsync(process.execPath, [cliPath, "init"], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  const envExample = path.join(tempDir, ".env.example");
+  const exists = await import("node:fs/promises").then((fs) => fs.access(envExample).then(() => true).catch(() => false));
+
+  assert.equal(exists, true);
+});
+
 test("CLI check reports missing env vars and undeclared imports", async () => {
   const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-check-"));
   mkdirSync(path.join(tempDir, "src"), { recursive: true });
