@@ -81,8 +81,14 @@ npm run fathom -- diff --json
 Optional AI interpretation is explicit and requires consent:
 
 ```bash
+fathom setup
+```
+
+The guided setup asks for a profile, provider, model, endpoint, and environment
+variable name. It never asks for or stores the API key. After setup:
+
+```bash
 export OPENAI_API_KEY=your-key
-fathom config set ai.profile default
 fathom check --ai --json
 ```
 
@@ -90,8 +96,15 @@ For PowerShell:
 
 ```powershell
 $env:OPENAI_API_KEY = "your-key"
-fathom config set ai.profile default
+fathom setup
 fathom check --ai
+```
+
+For scripts or CI, use the non-interactive form:
+
+```powershell
+$env:OPENAI_API_KEY = "your-key"
+fathom setup --non-interactive --profile default --provider openai --model gpt-4o-mini --api-key-env OPENAI_API_KEY
 ```
 
 `check --ai` runs deterministic checks first, then adds one clearly labelled

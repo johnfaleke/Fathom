@@ -77,6 +77,7 @@ fathom status
 - `fathom check --ai`: runs deterministic checks, then explicitly adds interpretation using the active profile.
 - `fathom config show`: prints project configuration.
 - `fathom config set ai.profile <name>`: selects a named AI profile without storing its API key.
+- `fathom setup`: interactive AI onboarding; it stores profile metadata but never asks for or stores the API key.
 - `fathom interpret --provider openai --consent`: explicitly sends filtered context to the configured provider for optional interpretation; requires `OPENAI_API_KEY`.
 
 Add `--json` to `status`, `diff`, or `check` for automation.
@@ -125,6 +126,7 @@ Providers must be opt-in, clearly label interpretation, preserve underlying evid
 The v0.2 CLI uses the OpenAI-compatible adapter through the simpler check flow:
 
 ```bash
+fathom setup
 OPENAI_API_KEY=your-key fathom check --ai --json
 ```
 

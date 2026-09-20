@@ -5,6 +5,7 @@ import { cmdStatus } from "./commands/status.js";
 import { cmdDiff } from "./commands/diff.js";
 import { cmdInterpret } from "./commands/interpret.js";
 import { cmdConfig } from "./commands/config.js";
+import { cmdSetup } from "./commands/setup.js";
 
 const VERSION = "0.1.0";
 
@@ -26,6 +27,7 @@ Commands:
   check --ai [--json]             Add opt-in provider interpretation
   config show                     Show local configuration
   config set <key> <value>        Update AI profile configuration
+  setup                           Guided AI setup for this workspace
   interpret --provider openai
                                   Opt-in AI interpretation with explicit consent
 
@@ -83,6 +85,16 @@ async function main(): Promise<void> {
       break;
     case "config":
       process.exitCode = await cmdConfig(process.cwd(), args.slice(1));
+      break;
+    case "setup":
+      process.exitCode = await cmdSetup(process.cwd(), {
+        profile: parseOption(args.slice(1), "--profile"),
+        provider: parseOption(args.slice(1), "--provider") as "openai" | "custom" | undefined,
+        model: parseOption(args.slice(1), "--model"),
+        baseUrl: parseOption(args.slice(1), "--base-url"),
+        apiKeyEnv: parseOption(args.slice(1), "--api-key-env"),
+        nonInteractive: args.includes("--non-interactive"),
+      });
       break;
     case "interpret":
       process.exitCode = await cmdInterpret(process.cwd(), {

@@ -76,6 +76,7 @@ Set the provider key, choose a profile, review the project's ignore and AI
 context policy, then request interpretation through the normal check flow:
 
 ```bash
+fathom setup
 OPENAI_API_KEY=your-key fathom check --ai --json
 ```
 
@@ -83,9 +84,13 @@ On PowerShell:
 
 ```powershell
 $env:OPENAI_API_KEY = "your-key"
-fathom config set ai.profile default
+fathom setup
 fathom check --ai --json
 ```
+
+The setup wizard asks for configuration but never asks for the API key. For
+automation, use `fathom setup --non-interactive` with `--profile`, `--provider`,
+`--model`, `--base-url`, and `--api-key-env`.
 
 The command reports interpretation separately from deterministic findings. It
 does not write model text into the Work State schema or silently upload context.
