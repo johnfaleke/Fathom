@@ -93,7 +93,8 @@ automation, use `fathom setup --non-interactive` with `--profile`, `--provider`,
 `--model`, `--base-url`, and `--api-key-env`.
 
 The command reports interpretation separately from deterministic findings. It
-does not write model text into the Work State schema or silently upload context.
+does not write model text into the Work State schema. Plain `fathom check` never
+uploads context; `fathom check --ai` is the explicit network boundary.
 
 Profiles support multiple providers and custom OpenAI-compatible gateways:
 

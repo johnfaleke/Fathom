@@ -39,6 +39,11 @@ export async function cmdCheck(
 
   let interpretation;
   if (opts.ai) {
+    if (config.ai?.enabled !== true) {
+      console.error("AI interpretation is not configured for this workspace.");
+      console.error("Run `fathom setup` first, then review the profile before using `fathom check --ai`.");
+      return 1;
+    }
     try {
       interpretation = await interpretProject(root, config, opts.prompt);
     } catch (error) {

@@ -42,3 +42,30 @@ If a project has large generated folders or vendor directories, add them to the 
 - Never add secrets or environment files to the ignore list unless you intend to exclude them from the project model.
 - Prefer explicit directories over broad globs when possible.
 - Keep the config stable so that deterministic checks remain reproducible.
+
+## AI usage security
+
+`fathom scan`, `fathom status`, `fathom diff`, and plain `fathom check` are local-only.
+They do not call a model or send project files over the network.
+
+AI use requires two deliberate steps:
+
+```bash
+fathom setup
+fathom check --ai
+```
+
+`fathom setup` enables the workspace profile. `check --ai` is the explicit network
+boundary; it sends only the filtered context to the configured endpoint. Review
+these fields before using it in a repository you did not create:
+
+- `ai.profile` and the selected profile's `provider`
+- `ai.profiles.<name>.baseUrl`
+- `ai.profiles.<name>.apiKeyEnv`
+- `ai.includePaths` and `ai.maxFileBytes`
+
+API keys are read from the named environment variable and are never written to
+`.fathom/config.json`. Do not run `check --ai` in an untrusted repository while
+valuable credentials are present in your shell environment. Use plain `fathom check`
+for untrusted code, or inspect the configuration and run `fathom setup` yourself
+before enabling AI.

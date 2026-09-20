@@ -122,7 +122,8 @@ fathom setup --non-interactive --profile default --provider openai --model gpt-4
 ```
 
 `check --ai` runs deterministic checks first, then adds one clearly labelled
-interpretation using the active profile. It does not silently send anything.
+interpretation using the active profile. The `--ai` flag is the explicit network
+consent boundary; plain `fathom check` never sends project files.
 The lower-level `fathom interpret` command remains available for custom prompts.
 
 Multiple profiles and custom OpenAI-compatible endpoints are supported:
