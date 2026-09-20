@@ -63,6 +63,17 @@ test("OpenAI provider requires explicit consent before network access", async ()
   );
 });
 
+test("custom OpenAI-compatible profiles retain their provider identity", () => {
+  const provider = new OpenAIProvider({
+    apiKey: "test-key",
+    model: "local-model",
+    providerType: "custom",
+  });
+
+  assert.equal(provider.type, "custom");
+  assert.equal(provider.name, "Custom OpenAI-compatible provider");
+});
+
 async function readRequest(request: import("node:http").IncomingMessage): Promise<string> {
   const chunks: Buffer[] = [];
   for await (const chunk of request) chunks.push(Buffer.from(chunk));

@@ -35,7 +35,12 @@ export async function interpretProject(
     includePaths: profile.includePaths ?? config.ai?.includePaths,
     maxFileBytes: profile.maxFileBytes ?? config.ai?.maxFileBytes,
   });
-  const provider = new OpenAIProvider({ apiKey, model: profile.model, baseUrl: profile.baseUrl });
+  const provider = new OpenAIProvider({
+    apiKey,
+    model: profile.model,
+    baseUrl: profile.baseUrl,
+    providerType: profile.provider,
+  });
   const result = await provider.interpret({
     projectRoot: root,
     workState: state,

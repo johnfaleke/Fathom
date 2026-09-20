@@ -3,11 +3,13 @@ import type {
   AIInterpretationResult,
   AIProvider,
 } from "./provider.js";
+import type { ProviderType } from "./provider.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
   model: string;
   baseUrl?: string;
+  providerType?: ProviderType;
 }
 
 interface ChatCompletionResponse {
@@ -15,9 +17,9 @@ interface ChatCompletionResponse {
 }
 
 export class OpenAIProvider implements AIProvider {
-  readonly id = "openai";
-  readonly name = "OpenAI";
-  readonly type = "openai" as const;
+  readonly id: string;
+  readonly name: string;
+  readonly type: ProviderType;
 
   private readonly apiKey: string;
   private readonly model: string;
@@ -29,6 +31,9 @@ export class OpenAIProvider implements AIProvider {
     this.apiKey = options.apiKey;
     this.model = options.model;
     this.baseUrl = (options.baseUrl ?? "https://api.openai.com/v1").replace(/\/$/, "");
+    this.type = options.providerType ?? "openai";
+    this.id = this.type;
+    this.name = this.type === "custom" ? "Custom OpenAI-compatible provider" : "OpenAI";
   }
 
   async interpret(input: AIInterpretationRequest): Promise<AIInterpretationResult> {
