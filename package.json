@@ -16,7 +16,8 @@
     "dev": "tsx src/cli.ts",
     "fathom": "tsx src/cli.ts",
     "start": "node dist/cli.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/**/*.test.ts"
   },
   "engines": {
     "node": ">=18"
