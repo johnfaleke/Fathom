@@ -507,8 +507,10 @@ useful on its own.
 
 ### v0.3 — Automation surfaces
 
-- Machine-readable output (`--json`) for every command
-- CI usage, so a Work State can gate or annotate a change
+- Machine-readable output (`--json`) across all commands (`init`, `set`, `status`, `diff`, `check`, `scan`, `setup`, `config`, `interpret`)
+- CI usage, gating (`--max-attention <N>`, `--fail-on <severity>`), and deterministic exit codes
+- Native GitHub Actions PR annotations (`--format github`)
+- Markdown summary tables for CI step summaries and PR comments (`--format markdown`)
 
 ### Later — Ecosystem
 

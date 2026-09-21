@@ -4,7 +4,7 @@
 
 Fathom is a local-first CLI for project Work State. It gives developers a deterministic, evidence-backed view of what is happening in a repo: what is in progress, what has been completed, what changed, and what may be silently broken.
 
-Current release: `0.2.1` — Project Model and opt-in AI interpretation.
+Current release: `0.3.0` — Automation surfaces, CI gating, and GitHub Actions annotations.
 
 ## Why Fathom exists
 
@@ -228,13 +228,53 @@ itself; it is the deliberate release switch.
 
 | Command | Purpose |
 |---------|---------|
-| `fathom init` | Create `.fathom/` for state, config, and event history |
+| `fathom init [--json]` | Create `.fathom/` for state, config, and event history |
 | `fathom set --current ...` | Update current work and task lists |
-| `fathom status` | Show the current project state |
-| `fathom diff` | Show semantic file changes and project impact |
-| `fathom check` | Detect inconsistent or forgotten wiring |
+| `fathom status [--json]` | Show the current project state |
+| `fathom diff [--json]` | Show semantic file changes and project impact |
+| `fathom check [options]` | Detect inconsistent or forgotten wiring |
+| `fathom scan [--json]` | Build the local Project Model in `.fathom/model.json` |
+| `fathom setup [options]` | Guided interactive/non-interactive AI profile setup |
+| `fathom config show\|set` | Inspect or update AI profiles without storing keys |
+| `fathom interpret --consent` | Direct AI interpretation with custom prompt |
 
-Add `--json` to any of the reporting commands for machine-readable output.
+## CI & Automation
+
+Fathom v0.3 introduces first-class automation surfaces for CI pipelines, PR annotations, and gating.
+
+### GitHub Actions Annotations
+
+Run Fathom in GitHub Actions with `--format github` to annotate PR diffs directly:
+
+```yaml
+- name: Run Fathom Checks
+  run: npx @johnfaleke/fathom check --format github
+```
+
+### CI Gating & Exit Codes
+
+Gate pull requests based on attention thresholds:
+
+```bash
+# Fail if more than 0 attention items exist
+npx @johnfaleke/fathom check --max-attention 0
+
+# Fail if any warning is detected
+npx @johnfaleke/fathom check --fail-on warning
+```
+
+Exit codes:
+- `0`: Success (clean / no gating violations)
+- `1`: Error (uninitialized workspace or invalid configuration)
+- `2`: Findings detected (warnings or attention items exceeding threshold)
+
+### Markdown Report for PR Comments / Step Summary
+
+Output formatted Markdown tables directly into `$GITHUB_STEP_SUMMARY`:
+
+```bash
+npx @johnfaleke/fathom check --format markdown >> $GITHUB_STEP_SUMMARY
+```
 
 ## Example status output
 
