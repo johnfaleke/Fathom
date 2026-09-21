@@ -145,6 +145,74 @@ function groupFilesByArea(files: string[]): Array<{ label: string; items: string
   return [...buckets.entries()].map(([label, items]) => ({ label, items: items.slice(0, 3) }));
 }
 
+export function renderGitHubAnnotations(findings: Finding[]): string {
+  if (findings.length === 0) return "";
+  const lines: string[] = [];
+
+  for (const f of findings) {
+    const level = f.severity === "potential" ? "notice" : f.severity === "warning" ? "warning" : "notice";
+    const primaryEvidence = f.evidence.find((e) => Boolean(e.path));
+    const filePath = primaryEvidence?.path;
+    const title = titleCase(f.category);
+
+    const fileAttr = filePath ? ` file=${filePath},` : " ";
+    lines.push(`::${level}${fileAttr}title=${title}::${f.message.replace(/\r?\n/g, " ")}`);
+  }
+
+  return lines.join("\n") + "\n";
+}
+
+export function renderMarkdownSummary(
+  state: WorkState,
+  findings: Finding[],
+  interpretation?: AIInterpretationResult,
+): string {
+  const lines: string[] = [
+    `# Fathom Report`,
+    ``,
+    `| Metric | Status |`,
+    `| --- | --- |`,
+    `| **Current Work** | ${state.currentWork ?? "*(not set)*"} |`,
+    `| **Completed** | ${state.completed.length} |`,
+    `| **Remaining** | ${state.incomplete.length} |`,
+    `| **Attention Items** | ${state.attention} |`,
+    `| **Changed Files** | ${state.changes.filesChanged} |`,
+    ``,
+  ];
+
+  if (findings.length > 0) {
+    lines.push(`## Findings (${findings.length})`, ``, `| Severity | Check ID | Message | Evidence |`, `| --- | --- | --- | --- |`);
+    for (const f of findings) {
+      const badge = f.severity === "warning" ? "⚠️ Warning" : f.severity === "potential" ? "🔍 Potential" : "ℹ️ Info";
+      const ev = f.evidence.map((e) => (e.path ? `\`${e.path}\`: ${e.detail}` : e.detail)).join("<br/>");
+      lines.push(`| ${badge} | \`${f.id}\`<br/>*${titleCase(f.category)}* | ${f.message} | ${ev || "—"} |`);
+    }
+    lines.push(``);
+  } else {
+    lines.push(`> ✅ **No inconsistencies found across project wiring.**`, ``);
+  }
+
+  if (interpretation) {
+    lines.push(
+      `## AI Interpretation (${interpretation.provider})`,
+      ``,
+      `> **Confidence:** ${Math.round(interpretation.confidence * 100)}%`,
+      ``,
+      interpretation.summary,
+      ``,
+    );
+    if (interpretation.notes.length > 0) {
+      lines.push(`### Key Notes:`);
+      for (const note of interpretation.notes) {
+        lines.push(`- ${note}`);
+      }
+      lines.push(``);
+    }
+  }
+
+  return lines.join("\n") + "\n";
+}
+
 function titleCase(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
