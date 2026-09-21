@@ -5,23 +5,43 @@ import { readFile, writeFile } from "node:fs/promises";
 
 export async function cmdConfig(cwd: string, args: string[]): Promise<number> {
   const root = path.resolve(cwd);
+  const isJson = args.includes("--json");
+  const filteredArgs = args.filter((a) => a !== "--json");
+
   if (!(await isInitialized(root))) {
-    console.error("Fathom is not initialized. Run `fathom init` first.");
+    if (isJson) {
+      console.error(JSON.stringify({ error: "Fathom is not initialized. Run `fathom init` first." }));
+    } else {
+      console.error("Fathom is not initialized. Run `fathom init` first.");
+    }
     return 1;
   }
-  if (args[0] === "show") {
+  if (filteredArgs[0] === "show") {
     console.log(JSON.stringify(await loadConfig(root), null, 2));
     return 0;
   }
-  if (args[0] !== "set" || !args[1] || args[2] === undefined) {
-    console.error("Usage: fathom config show | fathom config set <key> <value>");
+  if (filteredArgs[0] !== "set" || !filteredArgs[1] || filteredArgs[2] === undefined) {
+    if (isJson) {
+      console.error(JSON.stringify({ error: "Usage: fathom config show | fathom config set <key> <value>" }));
+    } else {
+      console.error("Usage: fathom config show | fathom config set <key> <value>");
+    }
     return 1;
   }
 
+  const key = filteredArgs[1];
+  const rawValue = filteredArgs.slice(2).join(" ");
+  const parsedValue = parseValue(rawValue);
+
   const config = await loadConfig(root);
-  setConfigValue(config, args[1], parseValue(args.slice(2).join(" ")));
+  setConfigValue(config, key, parsedValue);
   await writeFile(fathomPaths(root).config, JSON.stringify(config, null, 2) + "\n", "utf8");
-  console.log(`Updated ${args[1]}.`);
+
+  if (isJson) {
+    console.log(JSON.stringify({ success: true, key, value: parsedValue }, null, 2));
+  } else {
+    console.log(`Updated ${key}.`);
+  }
   return 0;
 }
 
