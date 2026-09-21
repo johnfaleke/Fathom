@@ -8,7 +8,7 @@ import { cmdConfig } from "./commands/config.js";
 import { cmdSetup } from "./commands/setup.js";
 import { cmdScan } from "./commands/scan.js";
 
-const VERSION = "0.2.1";
+const VERSION = "0.3.0";
 
 function printHelp(): void {
   console.log(`fathom ${VERSION}
@@ -19,23 +19,29 @@ Usage:
   fathom <command> [options]
 
 Commands:
-  init                            Initialize Fathom in the current project
+  init [--json]                   Initialize Fathom in the current project
   set [--current <text>] [--complete <item>] [--incomplete <item>] 
                                   Update the active work state
   status [--json]                 Where does the project actually stand?
   diff [--json]                   What meaningfully changed (git-backed in v0.1)
-  check [--json]                  Find inconsistencies and forgotten wiring
-  check --ai [--json]             Add opt-in provider interpretation
-  config show                     Show local configuration
-  config set <key> <value>        Update AI profile configuration
-  setup                           Guided AI setup for this workspace
+  check [options]                 Find inconsistencies and forgotten wiring
+  check --ai [options]            Add opt-in provider interpretation
+  config show [--json]            Show local configuration
+  config set <key> <value> [--json]
+                                  Update AI profile configuration
+  setup [options]                 Guided AI setup for this workspace
   scan [--json]                   Build the local Project Model
-  interpret --provider openai
-                                  Opt-in AI interpretation with explicit consent
+  interpret --provider openai     Opt-in AI interpretation with explicit consent
+
+Automation & CI Options:
+  --json                          Emit machine-readable JSON output
+  --format <type>                 Output format: terminal | json | github | markdown
+  --max-attention <number>        CI gating: fail if attention items exceed threshold
+  --fail-on <severity>            CI gating: fail on severity: info | potential | warning
 
 Options:
-  -h, --help        Show help
-  -v, --version     Show version
+  -h, --help                      Show help
+  -v, --version                   Show version
 `);
 }
 
@@ -45,6 +51,10 @@ async function main(): Promise<void> {
 
   const statusOptions = parseStatusOptions(args.slice(1));
   const json = statusOptions.json || args.includes("--json");
+  const format = parseFormatOption(args.slice(1), json);
+  const maxAttentionRaw = parseOption(args.slice(1), "--max-attention");
+  const maxAttention = maxAttentionRaw !== undefined ? Number(maxAttentionRaw) : undefined;
+  const failOn = parseOption(args.slice(1), "--fail-on") as ("info" | "potential" | "warning" | undefined);
 
   if (!command || command === "-h" || command === "--help") {
     printHelp();
@@ -57,7 +67,7 @@ async function main(): Promise<void> {
 
   switch (command) {
     case "init":
-      process.exitCode = await cmdInit(process.cwd());
+      process.exitCode = await cmdInit(process.cwd(), { json });
       break;
     case "set":
       process.exitCode = await cmdStatus(process.cwd(), {
@@ -81,6 +91,9 @@ async function main(): Promise<void> {
     case "check":
       process.exitCode = await cmdCheck(process.cwd(), {
         json,
+        format,
+        maxAttention,
+        failOn,
         ai: args.includes("--ai"),
         prompt: parseOption(args.slice(1), "--prompt"),
       });
@@ -96,6 +109,7 @@ async function main(): Promise<void> {
         baseUrl: parseOption(args.slice(1), "--base-url"),
         apiKeyEnv: parseOption(args.slice(1), "--api-key-env"),
         nonInteractive: args.includes("--non-interactive"),
+        json,
       });
       break;
     case "scan":
@@ -175,6 +189,14 @@ function parseOption(args: string[], option: string): string | undefined {
   const index = args.indexOf(option);
   const value = index >= 0 ? args[index + 1] : undefined;
   return value && !value.startsWith("--") ? value : undefined;
+}
+
+function parseFormatOption(args: string[], json: boolean): "terminal" | "json" | "github" | "markdown" {
+  const raw = parseOption(args, "--format");
+  if (raw === "json" || raw === "github" || raw === "markdown" || raw === "terminal") {
+    return raw;
+  }
+  return json ? "json" : "terminal";
 }
 
 main().catch((err: unknown) => {
