@@ -7,6 +7,7 @@ import { cmdInterpret } from "./commands/interpret.js";
 import { cmdConfig } from "./commands/config.js";
 import { cmdSetup } from "./commands/setup.js";
 import { cmdScan } from "./commands/scan.js";
+import { cmdMCP } from "./commands/mcp.js";
 
 const VERSION = "0.3.0";
 
@@ -31,6 +32,7 @@ Commands:
                                   Update AI profile configuration
   setup [options]                 Guided AI setup for this workspace
   scan [--json]                   Build the local Project Model
+  mcp                             Start Model Context Protocol (MCP) stdio server
   interpret --provider openai     Opt-in AI interpretation with explicit consent
 
 Automation & CI Options:
@@ -114,6 +116,9 @@ async function main(): Promise<void> {
       break;
     case "scan":
       process.exitCode = await cmdScan(process.cwd(), { json });
+      break;
+    case "mcp":
+      process.exitCode = await cmdMCP(process.cwd());
       break;
     case "interpret":
       process.exitCode = await cmdInterpret(process.cwd(), {
