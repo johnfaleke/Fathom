@@ -234,9 +234,37 @@ itself; it is the deliberate release switch.
 | `fathom diff [--json]` | Show semantic file changes and project impact |
 | `fathom check [options]` | Detect inconsistent or forgotten wiring |
 | `fathom scan [--json]` | Build the local Project Model in `.fathom/model.json` |
+| `fathom mcp` | Start Model Context Protocol (MCP) stdio server for agents |
 | `fathom setup [options]` | Guided interactive/non-interactive AI profile setup |
 | `fathom config show\|set` | Inspect or update AI profiles without storing keys |
 | `fathom interpret --consent` | Direct AI interpretation with custom prompt |
+
+## Model Context Protocol (MCP) Server
+
+Fathom includes a built-in standard **Model Context Protocol (MCP)** stdio server. This enables AI coding agents (Claude Desktop, Cursor, Antigravity, Windsurf, Roo Code) to inspect and update Work State directly.
+
+### Tools provided to agents:
+- `fathom_status` — Read active work state, progress, findings, and attention items.
+- `fathom_scan` — Generate and return evidence-backed Project Model.
+- `fathom_check` — Run deterministic checks and return findings with evidence.
+- `fathom_set_work` — Update current work description, completed tasks, and remaining tasks.
+- `fathom_diff` — Read semantic git changes grouped by project area.
+- `fathom_get_model` — Read `.fathom/model.json`.
+
+### MCP Configuration:
+
+Add to `claude_desktop_config.json` or `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "fathom": {
+      "command": "npx",
+      "args": ["-y", "@johnfaleke/fathom", "mcp"]
+    }
+  }
+}
+```
 
 ## CI & Automation
 

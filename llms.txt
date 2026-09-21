@@ -76,6 +76,7 @@ fathom status
 - `fathom status`: reports current Work State, findings, and changed files.
 - `fathom diff`: summarizes Git changes by project area. Requires a Git repository.
 - `fathom scan`: builds and persists the evidence-backed Project Model at `.fathom/model.json`.
+- `fathom mcp`: starts the Model Context Protocol (MCP) stdio server for AI coding agents.
 - `fathom check`: runs deterministic checks and exits with code 2 when warning findings exist.
 - `fathom check --ai`: runs deterministic checks, then explicitly adds interpretation using the active profile.
 - `fathom config show`: prints project configuration.

@@ -512,14 +512,11 @@ useful on its own.
 - Native GitHub Actions PR annotations (`--format github`)
 - Markdown summary tables for CI step summaries and PR comments (`--format markdown`)
 
-### Later — Ecosystem
+### Ecosystem & Agent Surfaces
 
-- MCP server, so agents can read and write Work State
-- Editor integrations
-- Adapters letting agents explicitly communicate work state to Fathom
-
-Everything beyond v0.1 is explicitly *later*. None of it is required for Fathom to be
-useful.
+- Standard Model Context Protocol (`fathom mcp`) server enabling agents to inspect and update Work State
+- Editor integrations and JSON-RPC tool access
+- Agent-native Work State bidirectional reading and writing
 
 ---
 
