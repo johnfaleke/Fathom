@@ -115,3 +115,14 @@ export interface WorkStateSummary {
   attention: number;
   findingsCount: number;
 }
+
+export type OutputFormat = "terminal" | "json" | "github" | "markdown";
+
+export interface CheckOptions {
+  json?: boolean;
+  ai?: boolean;
+  prompt?: string;
+  format?: OutputFormat;
+  maxAttention?: number;
+  failOn?: Severity;
+}
