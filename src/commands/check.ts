@@ -10,17 +10,27 @@ import {
   loadState,
   saveState,
 } from "../core/storage.js";
-import { renderFindings, renderInterpretation } from "../render/terminal.js";
+import {
+  renderFindings,
+  renderGitHubAnnotations,
+  renderInterpretation,
+  renderMarkdownSummary,
+} from "../render/terminal.js";
+import type { CheckOptions, Severity } from "../types.js";
 import { interpretProject } from "./interpret.js";
 
 export async function cmdCheck(
   cwd: string,
-  opts: { json?: boolean; ai?: boolean; prompt?: string } = {},
+  opts: CheckOptions = {},
 ): Promise<number> {
   const root = path.resolve(cwd);
 
   if (!(await isInitialized(root))) {
-    console.error("Fathom is not initialized. Run `fathom init` first.");
+    if (opts.format === "json" || opts.json) {
+      console.error(JSON.stringify({ error: "Fathom is not initialized. Run `fathom init` first." }));
+    } else {
+      console.error("Fathom is not initialized. Run `fathom init` first.");
+    }
     return 1;
   }
 
@@ -40,23 +50,86 @@ export async function cmdCheck(
   let interpretation;
   if (opts.ai) {
     if (config.ai?.enabled !== true) {
-      console.error("AI interpretation is not configured for this workspace.");
-      console.error("Run `fathom setup` first, then review the profile before using `fathom check --ai`.");
+      const msg = "AI interpretation is not configured for this workspace.\nRun `fathom setup` first, then review the profile before using `fathom check --ai`.";
+      if (opts.format === "json" || opts.json) {
+        console.error(JSON.stringify({ error: msg }));
+      } else {
+        console.error(msg);
+      }
       return 1;
     }
     try {
       interpretation = await interpretProject(root, config, opts.prompt);
     } catch (error) {
-      console.error(error instanceof Error ? error.message : String(error));
+      const errMsg = error instanceof Error ? error.message : String(error);
+      if (opts.format === "json" || opts.json) {
+        console.error(JSON.stringify({ error: errMsg }));
+      } else {
+        console.error(errMsg);
+      }
       return 1;
     }
   }
 
-  if (opts.json) {
-    console.log(JSON.stringify({ findings, attention: state.attention, interpretation: interpretation ? { ...interpretation.result, context: { filesIncluded: Object.keys(interpretation.context.files), excluded: interpretation.context.excluded } } : undefined }, null, 2));
-  } else {
-    process.stdout.write(renderFindings(findings));
-    if (interpretation) process.stdout.write(renderInterpretation(interpretation.result, interpretation.context));
+  const format = opts.format ?? (opts.json ? "json" : "terminal");
+
+  switch (format) {
+    case "json":
+      console.log(
+        JSON.stringify(
+          {
+            findings,
+            attention: state.attention,
+            interpretation: interpretation
+              ? {
+                  ...interpretation.result,
+                  context: {
+                    filesIncluded: Object.keys(interpretation.context.files),
+                    excluded: interpretation.context.excluded,
+                  },
+                }
+              : undefined,
+          },
+          null,
+          2,
+        ),
+      );
+      break;
+    case "github":
+      process.stdout.write(renderGitHubAnnotations(findings));
+      process.stdout.write(renderFindings(findings));
+      if (interpretation) {
+        process.stdout.write(renderInterpretation(interpretation.result, interpretation.context));
+      }
+      break;
+    case "markdown":
+      process.stdout.write(renderMarkdownSummary(state, findings, interpretation?.result));
+      break;
+    case "terminal":
+    default:
+      process.stdout.write(renderFindings(findings));
+      if (interpretation) {
+        process.stdout.write(renderInterpretation(interpretation.result, interpretation.context));
+      }
+      break;
+  }
+
+  return evaluateGating(state.attention, findings, opts);
+}
+
+function evaluateGating(attention: number, findings: Array<{ severity: Severity }>, opts: CheckOptions): number {
+  if (opts.maxAttention !== undefined) {
+    if (attention > opts.maxAttention) return 2;
+    return 0;
+  }
+
+  if (opts.failOn) {
+    const severities: Severity[] = opts.failOn === "info"
+      ? ["info", "potential", "warning"]
+      : opts.failOn === "potential"
+      ? ["potential", "warning"]
+      : ["warning"];
+    return findings.some((f) => severities.includes(f.severity)) ? 2 : 0;
   }
 
   return findings.some((f) => f.severity === "warning") ? 2 : 0;
