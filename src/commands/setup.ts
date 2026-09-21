@@ -12,16 +12,17 @@ export interface SetupOptions {
   baseUrl?: string;
   apiKeyEnv?: string;
   nonInteractive?: boolean;
+  json?: boolean;
 }
 
 export async function cmdSetup(cwd: string, options: SetupOptions = {}): Promise<number> {
   const root = path.resolve(cwd);
   if (!(await isInitialized(root))) {
     await initFathom(root);
-    console.log("Initialized Fathom for this workspace.");
+    if (!options.json) console.log("Initialized Fathom for this workspace.");
   }
 
-  const rl = options.nonInteractive ? null : createInterface({ input, output });
+  const rl = (options.nonInteractive || options.json) ? null : createInterface({ input, output });
   try {
     const profile = options.profile ?? (await ask(rl, "Profile name", "default"));
     const provider = options.provider ?? (await askChoice(rl, "Provider", ["openai", "custom"], "openai")) as "openai" | "custom";
@@ -38,9 +39,21 @@ export async function cmdSetup(cwd: string, options: SetupOptions = {}): Promise
     config.ai.profiles[profile] = { provider, model, baseUrl, apiKeyEnv };
     await writeFile(fathomPaths(root).config, JSON.stringify(config, null, 2) + "\n", "utf8");
 
-    console.log(`\nFathom AI is ready with the '${profile}' profile.`);
-    console.log(`Set your key:  $env:${apiKeyEnv} = "your-key"`);
-    console.log("Run next:     fathom check --ai");
+    if (options.json) {
+      console.log(JSON.stringify({
+        success: true,
+        profile,
+        provider,
+        model,
+        baseUrl,
+        apiKeyEnv,
+        configFile: fathomPaths(root).config,
+      }, null, 2));
+    } else {
+      console.log(`\nFathom AI is ready with the '${profile}' profile.`);
+      console.log(`Set your key:  $env:${apiKeyEnv} = "your-key"`);
+      console.log("Run next:     fathom check --ai");
+    }
     return 0;
   } finally {
     rl?.close();
