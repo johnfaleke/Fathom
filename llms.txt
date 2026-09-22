@@ -1,10 +1,10 @@
 # Fathom
 
-> AI can generate the work. Fathom helps you understand the work.
+> Measure reality. Understand the change.
 
-Current release: 0.3.0.
+Current release: 0.4.0.
 
-Fathom is an open-source, local-first CLI for project Work State. It reads observable repository evidence and reports what is in progress, what is complete, what changed, and what may be silently broken.
+Fathom is an open-source, local-first CLI and MCP Server for Project Models and State Ledgers. It automatically reconstructs project reality, infers active objectives, groups changes into semantic software domains, deduces what is likely complete, and surfaces what doesn't line up with deterministic evidence.
 
 ## Canonical links
 
@@ -15,12 +15,12 @@ Fathom is an open-source, local-first CLI for project Work State. It reads obser
 
 ## Principles
 
-- Local-first: no account or backend is required.
-- Deterministic first: checks report evidence before any interpretation.
-- Evidence-backed: findings include a category, severity, message, and evidence.
-- Machine-readable: status, diff, and check support JSON output.
-- Privacy-aware: no telemetry by default; secrets and .env values should never be sent to an AI provider.
-- Open by design: Work State and the Check interface are public extension surfaces.
+- Local-first: no account, cloud, or backend required.
+- Automatic understanding: reconstructs intent and domain maps from repository signals without requiring manual bookkeeping.
+- Evidence before opinion: deterministic checks and explainability with exact file and line coordinates.
+- MCP Native: live stdio server providing tools and resources directly to AI coding agents.
+- Privacy-aware: zero telemetry; automatic secret redaction and binary filtering before any external AI transmission.
+- CI/CD Gating: universal `--json`, exit codes (0/1/2), and GitHub Actions annotations.
 
 ## Install and run
 
@@ -30,144 +30,41 @@ Install the published package globally:
 npm install --global @johnfaleke/fathom
 ```
 
-Then run it from any project workspace. The Fathom repository does not need to
-be present there:
+Run from any project repository:
 
 ```bash
 cd /path/to/project
 fathom init
-fathom set --current "Ship OAuth" --complete "Login API" --incomplete "Webhook retry"
-fathom check
 fathom status
-fathom diff
+fathom explain FND-01
+fathom check --format github
 ```
 
-For repository development, install dependencies and build from the Fathom repository:
+Launch the Model Context Protocol (MCP) stdio server:
 
 ```bash
-npm install
-npm run build
+fathom mcp
 ```
 
-To analyze another project without a global install, run the built CLI while that project is the current working directory:
+## MCP Endpoints
 
-```bash
-node /path/to/Fathom/dist/cli.js init
-node /path/to/Fathom/dist/cli.js set --current "Ship OAuth" --complete "Login API" --incomplete "Webhook retry"
-node /path/to/Fathom/dist/cli.js check
-node /path/to/Fathom/dist/cli.js status
-node /path/to/Fathom/dist/cli.js diff
-```
+- Tools:
+  - `fathom_status`: Inferred objective, semantic software map, completions, and findings.
+  - `fathom_explain`: Deterministic evidence breakdown and risk report for a finding ID.
+  - `fathom_check`: Verification checks for environment variables and manifests.
+  - `fathom_scan`: Rebuilds `.fathom/model.json`.
+  - `fathom_diff`: Semantic project-level diff grouped by domain.
+- Resources:
+  - `fathom://sounding`: Live sounding JSON.
+  - `fathom://model`: Project Model claim graph (`.fathom/model.json`).
+  - `fathom://state`: Local state snapshot (`.fathom/state.json`).
+  - `fathom://config`: Local configuration (`.fathom/config.json`).
+  - `fathom://events`: Append-only event history (`.fathom/events.jsonl`).
 
-For local development, `npm link` from the Fathom directory exposes the `fathom` command globally:
+## Automation & CI Gating
 
-```bash
-npm link
-cd /path/to/project
-fathom init
-fathom check
-fathom status
-```
-
-## Commands
-
-- `fathom init`: creates `.fathom/` state, config, events, and `.env.example`.
-- `fathom set`: records current work and comma-separated completed or incomplete work items.
-- `fathom status`: reports current Work State, findings, and changed files.
-- `fathom diff`: summarizes Git changes by project area. Requires a Git repository.
-- `fathom scan`: builds and persists the evidence-backed Project Model at `.fathom/model.json`.
-- `fathom mcp`: starts the Model Context Protocol (MCP) stdio server for AI coding agents.
-- `fathom check`: runs deterministic checks and exits with code 2 when warning findings exist.
-- `fathom check --ai`: runs deterministic checks, then explicitly adds interpretation using the active profile.
-- `fathom config show`: prints project configuration.
-- `fathom config set ai.profile <name>`: selects a named AI profile without storing its API key.
-- `fathom setup`: interactive AI onboarding; it stores profile metadata but never asks for or stores the API key.
-- `fathom interpret --provider openai --consent`: explicitly sends filtered context to the configured provider for optional interpretation; requires `OPENAI_API_KEY`.
-
-Add `--json` to `status`, `diff`, or `check` for automation.
-
-## Local files
-
-`.fathom/config.json` contains the version and explicit ignored directories. `.fathom/state.json` stores the current Work State. `.fathom/events.jsonl` stores append-only command observations. `.env.example` is the canonical environment reference used by the environment-variable check.
-
-## Built-in checks
-
-- `config.env-var-missing`: finds `process.env.X` usage without an entry in `.env.example`.
-- `deps.undeclared-import`: finds imported packages missing from `package.json`.
-
-## Work State shape
-
-A Work State has `version`, `updatedAt`, `root`, `currentWork`, `completed`, `incomplete`, `findings`, `changes`, and `attention`. Findings use stable IDs, categories, one of `info`, `warning`, or `potential` severity, a message, and an evidence array.
-
-## Project Model
-
-`fathom scan` produces a versioned Project Model with project identity, visible file count, detected stack, dependencies, observations, and claims. Claims have a subject, predicate, object, confidence, and evidence. The model is stored locally in `.fathom/model.json`; no API key is required.
-
-## Extension interface
-
-A check implements:
-
-```ts
-interface Check {
-  id: string;
-  run(ctx: ProjectContext): Promise<Finding[]>;
-}
-```
-
-The public package exports `Check`, `Finding`, `Evidence`, `ProjectContext`, `WorkState`, `runChecks`, `createProjectContext`, and `builtinChecks`.
-
-## Optional AI provider interface
-
-AI interpretation is intentionally separate from deterministic evidence:
-
-```ts
-interface AIProvider {
-  id: string;
-  name: string;
-  type: "openai" | "anthropic" | "google" | "custom";
-  interpret(input: AIInterpretationRequest): Promise<AIInterpretationResult>;
-}
-```
-
-Providers must be opt-in, clearly label interpretation, preserve underlying evidence, require consent for remote context, and never receive secrets or `.env` values.
-
-The v0.2 CLI uses the OpenAI-compatible adapter through the simpler check flow:
-
-```bash
-fathom setup
-OPENAI_API_KEY=your-key fathom check --ai --json
-```
-
-Optional `.fathom/config.json` policy:
-
-```json
-{
-  "version": 1,
-  "ignore": ["node_modules", "dist", ".git", ".fathom"],
-  "ai": {
-    "profile": "work",
-    "profiles": {
-      "work": {
-        "provider": "openai",
-        "model": "gpt-4o-mini",
-        "apiKeyEnv": "OPENAI_API_KEY"
-      }
-    },
-    "includePaths": ["README.md", "src/index.ts"],
-    "maxFileBytes": 50000
-  }
-}
-```
-
-## Contribution path
-
-1. Fork the repository.
-2. Add or improve a deterministic check.
-3. Include evidence in each finding.
-4. Add a focused test.
-5. Run `npm run build` and `npm test`.
-6. Open a pull request explaining the observable behavior.
-
-## Product status
-
-Fathom v0.1 is the deterministic core. MCP, editor integrations, broader check packs, and production AI providers are later roadmap work.
+- `--json`: Machine-readable JSON output on all commands.
+- `--format github`: Emits `::warning` and `::error` annotations on PR diffs.
+- `--format markdown`: Summary tables for PR descriptions.
+- `--max-attention <N>`: Fail build if unresolved attention items exceed threshold.
+- `--fail-on <severity>`: Fail build based on severity (`info`, `potential`, `warning`).

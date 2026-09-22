@@ -31,9 +31,9 @@
       <section class="hero section-shell">
         <div class="hero-atmosphere" aria-hidden="true"><div class="atmosphere-grid"></div><div class="atmosphere-sweep"></div><div class="atmosphere-contour atmosphere-contour-one"></div><div class="atmosphere-contour atmosphere-contour-two"></div></div>
         <div class="hero-copy reveal">
-          <p class="eyebrow"><span class="eyebrow-dot"></span> Open source · local first · v0.3.0</p>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Open source · local first · v0.4.0</p>
           <h1>Measure reality.<br /><em>Understand the change.</em></h1>
-          <p class="hero-lede">Fathom builds an evidence-backed model of your project: what exists, what changed, what is wired up, and what still needs your attention.</p>
+          <p class="hero-lede">Fathom automatically reconstructs your project: what is being worked on, what changed, what is likely complete, and what still needs your attention.</p>
           <div class="hero-actions">
             <a class="button button-dark" href="#install">Get started <span aria-hidden="true">↓</span></a>
             <a class="button button-outline button-github" href="https://github.com/johnfaleke/Fathom" target="_blank" rel="noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.34-1.77-1.34-1.77-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.8 1.3 3.49.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.93 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.17 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.12 3.17.76.84 1.23 1.91 1.23 3.22 0 4.6-2.8 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z" /></svg> View source <span aria-hidden="true">↗</span></a>
@@ -41,17 +41,17 @@
           <p class="microcopy">No account. No cloud. No telemetry by default.</p>
         </div>
         <div class="hero-instrument reveal reveal-delay-1" aria-label="Example Fathom status output">
-          <div class="instrument-topline"><span>FATHOM / STATUS</span><span class="live-indicator">● LOCAL</span></div>
+          <div class="instrument-topline"><span>FATHOM / SOUNDING</span><span class="live-indicator">● LOCAL</span></div>
           <div class="instrument-body">
-            <div class="instrument-title">Project sounding <span>↗</span></div>
-            <div class="instrument-row instrument-row-muted"><span>Current work</span><strong>Ship the subscription flow</strong></div>
-            <div class="instrument-row"><span>Completed</span><strong class="green">04</strong></div>
-            <div class="instrument-row"><span>Remaining</span><strong class="amber">02</strong></div>
+            <div class="instrument-title">Stripe Subscriptions <span>↗</span></div>
+            <div class="instrument-row instrument-row-muted"><span>Inferred Objective</span><strong>Implement Stripe Billing</strong></div>
+            <div class="instrument-row"><span>Likely Complete</span><strong class="green">03</strong></div>
+            <div class="instrument-row"><span>Needs Attention</span><strong class="amber">01</strong></div>
             <div class="instrument-rule"></div>
-            <div class="finding"><span class="finding-mark">!</span><div><strong>Configuration</strong><p>STRIPE_WEBHOOK_SECRET is used but missing from .env.example</p></div></div>
+            <div class="finding"><span class="finding-mark">!</span><div><strong>[FND-01] Configuration</strong><p>STRIPE_WEBHOOK_SECRET is used but missing from .env.example</p></div></div>
             <div class="finding finding-blue"><span class="finding-mark">→</span><div><strong>Evidence attached</strong><p>src/webhooks/stripe.ts · line 18</p></div></div>
           </div>
-          <div class="instrument-command"><span>$</span> fathom scan <button class="copy-button" data-copy="fathom scan" aria-label="Copy fathom scan command">copy</button></div>
+          <div class="instrument-command"><span>$</span> fathom status <button class="copy-button" data-copy="fathom status" aria-label="Copy fathom status command">copy</button></div>
         </div>
       </section>
 
@@ -70,7 +70,7 @@
 
       <section id="install" class="install-band">
         <div class="section-shell install-layout">
-          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Install once.<br /><em>Build the model.</em></h2><p>Install the CLI on your machine, then run it from any project workspace. Initialize each project once; its state stays local in <code>.fathom/</code>.</p><div class="install-flow"><div class="flow-step"><span>01</span><strong>Install globally or per project</strong><small>npm or npx</small></div><div class="flow-step"><span>02</span><strong>Scan the workspace</strong><small>Evidence → claims</small></div><div class="flow-step"><span>03</span><strong>Check & gate in CI</strong><small>Deterministic exit codes</small></div><div class="flow-step"><span>04</span><strong>Connect MCP to agents</strong><small>Cursor, Claude, Antigravity</small></div></div><a class="inline-link" href="#docs" data-doc-tab="commands">Explore the full CLI & MCP reference <span>↘</span></a></div>
+          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Install once.<br /><em>Build the model.</em></h2><p>Install the CLI on your machine, then run it from any project workspace. Initialize each project once; its state stays local in <code>.fathom/</code>.</p><div class="install-flow"><div class="flow-step"><span>01</span><strong>Install globally or per project</strong><small>npm or npx</small></div><div class="flow-step"><span>02</span><strong>Take a project sounding</strong><small>Auto-inferred objective & map</small></div><div class="flow-step"><span>03</span><strong>Inspect evidence & gate CI</strong><small>fathom explain & exit codes</small></div><div class="flow-step"><span>04</span><strong>Connect MCP to agents</strong><small>Cursor, Claude, Antigravity</small></div></div><a class="inline-link" href="#docs" data-doc-tab="commands">Explore the full CLI & MCP reference <span>↘</span></a></div>
           <div class="code-stack reveal reveal-delay-2">
             <div class="code-window"><div class="code-window-bar"><span class="window-dots">● ● ●</span><span>terminal</span></div><pre><code><span class="code-comment"># install globally once</span>
 <span class="code-command">npm install --global @johnfaleke/fathom</span>
@@ -78,13 +78,13 @@
 <span class="code-comment"># scan and check any workspace</span>
 <span class="code-command">cd /path/to/your-project</span>
 <span class="code-command">fathom init</span>
-<span class="code-command">fathom scan</span>
+<span class="code-command">fathom status</span>
+<span class="code-command">fathom explain FND-01</span>
 <span class="code-command">fathom check --format github</span>
-<span class="code-command">fathom status --json</span>
 <span class="code-command">fathom diff</span>
 
 <span class="code-comment"># launch stdio MCP server for coding agents</span>
-<span class="code-command">fathom mcp</span></code></pre><button class="copy-button copy-code" data-copy="npm install --global @johnfaleke/fathom&#10;cd /path/to/your-project&#10;fathom init&#10;fathom scan&#10;fathom check --format github&#10;fathom status --json&#10;fathom diff&#10;fathom mcp">copy</button></div>
+<span class="code-command">fathom mcp</span></code></pre><button class="copy-button copy-code" data-copy="npm install --global @johnfaleke/fathom&#10;cd /path/to/your-project&#10;fathom init&#10;fathom status&#10;fathom explain FND-01&#10;fathom check --format github&#10;fathom diff&#10;fathom mcp">copy</button></div>
             <p class="install-alternative"><strong>Pin per project:</strong> <code>npm install --save-dev @johnfaleke/fathom</code> then run <code>npx fathom</code>.</p>
           </div>
         </div>
@@ -122,22 +122,22 @@
           <div class="docs-content">
             <article id="commands" class="doc-block active" role="tabpanel" aria-labelledby="tab-btn-commands">
               <div class="doc-header">
-                <div><p class="doc-kicker">01 / WORKSPACE LOOP</p><h3>Scan first. Reason second.</h3></div>
+                <div><p class="doc-kicker">01 / WORKSPACE LOOP</p><h3>Reconstruct first. Understand second.</h3></div>
                 <p class="doc-summary">Every Fathom command runs locally by default, supports universal <code>--json</code> for scripting, and adheres to strict CI exit codes.</p>
               </div>
               <div class="command-list">
                 <div class="command-row">
-                  <code>fathom init</code>
+                  <code>fathom status</code>
                   <div>
-                    <strong>Initialize workspace state</strong>
-                    <span>Creates local <code>.fathom/</code> directory, configuration, event history, and sample baseline.</span>
+                    <strong>Automatic project sounding</strong>
+                    <span>Reconstructs current objective from Git, groups files by software domain, lists completed items and open findings.</span>
                   </div>
                 </div>
                 <div class="command-row">
-                  <code>fathom scan</code>
+                  <code>fathom explain &lt;id&gt;</code>
                   <div>
-                    <strong>Take a repo sounding</strong>
-                    <span>Extracts deterministic observations, packages, files, git state, and builds <code>.fathom/model.json</code>.</span>
+                    <strong>Inspect deterministic evidence</strong>
+                    <span>Shows exact coordinates, AST lines, manifest observations, risk level, and provenance for any finding (e.g. <code>fathom explain FND-01</code>).</span>
                   </div>
                 </div>
                 <div class="command-row">
@@ -148,24 +148,31 @@
                   </div>
                 </div>
                 <div class="command-row">
-                  <code>fathom status</code>
-                  <div>
-                    <strong>High-level sounding</strong>
-                    <span>Combines Work State, open findings, and changed files in one actionable terminal summary.</span>
-                  </div>
-                </div>
-                <div class="command-row">
                   <code>fathom diff</code>
                   <div>
                     <strong>Semantic change summary</strong>
-                    <span>Summarizes Git changes categorized by project area, risk profile, and affected dependencies.</span>
+                    <span>Summarizes Git changes categorized by project domain (API, Database, Logic, Config, Tests).</span>
                   </div>
                 </div>
                 <div class="command-row">
                   <code>fathom mcp</code>
                   <div>
                     <strong>Model Context Protocol stdio server</strong>
-                    <span>Connects AI coding assistants (Cursor, Claude Desktop, Antigravity) to live Fathom state via MCP tools and resources.</span>
+                    <span>Connects AI coding assistants (Cursor, Claude Desktop, Antigravity) to live Fathom soundings and tools via MCP.</span>
+                  </div>
+                </div>
+                <div class="command-row">
+                  <code>fathom scan</code>
+                  <div>
+                    <strong>Build Project Model</strong>
+                    <span>Extracts deterministic observations, packages, files, git state, and builds <code>.fathom/model.json</code>.</span>
+                  </div>
+                </div>
+                <div class="command-row">
+                  <code>fathom init</code>
+                  <div>
+                    <strong>Initialize workspace state</strong>
+                    <span>Creates local <code>.fathom/</code> directory, configuration, event history, and sample baseline.</span>
                   </div>
                 </div>
                 <div class="command-row">
