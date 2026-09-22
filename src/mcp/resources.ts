@@ -1,6 +1,7 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { fathomPaths, isInitialized } from "../core/storage.js";
+import { takeProjectSounding } from "../core/sounding.js";
 
 export interface MCPResourceDefinition {
   uri: string;
@@ -10,6 +11,12 @@ export interface MCPResourceDefinition {
 }
 
 export const MCP_RESOURCES: MCPResourceDefinition[] = [
+  {
+    uri: "fathom://sounding",
+    name: "Fathom Live Sounding",
+    description: "Live inferred objective, semantic domain map, completions, and findings",
+    mimeType: "application/json",
+  },
   {
     uri: "fathom://state",
     name: "Fathom Work State",
@@ -46,6 +53,13 @@ export async function readMCPResource(
     throw new Error("Fathom is not initialized in this workspace.");
   }
 
+  if (uri === "fathom://sounding") {
+    const sounding = await takeProjectSounding(absRoot);
+    return {
+      contents: [{ uri, mimeType: "application/json", text: JSON.stringify(sounding, null, 2) }],
+    };
+  }
+
   const paths = fathomPaths(absRoot);
   let filePath: string;
   let mimeType = "application/json";
@@ -77,3 +91,4 @@ export async function readMCPResource(
     throw new Error(`Failed to read resource ${uri}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
+

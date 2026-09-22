@@ -4,6 +4,8 @@ import { gitChangedFiles, gitDiffStat, gitIsRepo } from "../core/git.js";
 import { buildProjectModel } from "../core/model.js";
 import { createProjectContext } from "../core/project.js";
 import { runChecks } from "../core/runner.js";
+import { takeProjectSounding } from "../core/sounding.js";
+import { buildExplanation } from "../core/completion.js";
 import {
   applyFindings,
   isInitialized,
@@ -30,10 +32,25 @@ export const MCP_TOOLS: MCPToolDefinition[] = [
   {
     name: "fathom_status",
     description:
-      "Get current project Work State, active tasks, completed/remaining items, deterministic findings with evidence, and git change impact.",
+      "Get automatic project sounding: inferred objective, semantic software map, likely completed items, deterministic findings with IDs, and project drift.",
     inputSchema: {
       type: "object",
       properties: {},
+    },
+  },
+  {
+    name: "fathom_explain",
+    description:
+      "Inspect deterministic evidence coordinates, risk level, and provenance for a specific finding ID (e.g. FND-01 or config.env-var-missing).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        findingId: {
+          type: "string",
+          description: "The finding code (e.g. FND-01) or check ID (e.g. config.env-var-missing) to explain.",
+        },
+      },
+      required: ["findingId"],
     },
   },
   {
@@ -124,18 +141,46 @@ export async function executeMCPTool(
 
     switch (toolName) {
       case "fathom_status": {
-        const ctx = await createProjectContext(absRoot, config);
-        const findings = await runChecks(ctx, builtinChecks);
-        const changed = await gitChangedFiles(absRoot);
-        let state = await loadState(absRoot);
-        state = applyFindings(state, findings);
-        state.changes = {
-          filesChanged: changed.length,
-          summary: changed.slice(0, 20).map((f) => `~ ${f}`),
-        };
-        await saveState(absRoot, state);
+        const sounding = await takeProjectSounding(absRoot);
         return {
-          content: [{ type: "text", text: JSON.stringify(state, null, 2) }],
+          content: [{ type: "text", text: JSON.stringify(sounding, null, 2) }],
+        };
+      }
+
+      case "fathom_explain": {
+        const findingId = typeof args.findingId === "string" ? args.findingId : undefined;
+        const sounding = await takeProjectSounding(absRoot);
+        if (!findingId) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  error: "findingId parameter is required.",
+                  availableFindings: sounding.needsAttention.map((f) => ({ code: f.code, id: f.id, message: f.message })),
+                }),
+              },
+            ],
+            isError: true,
+          };
+        }
+        const exp = buildExplanation(findingId, sounding);
+        if (!exp) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  error: `Finding '${findingId}' not found.`,
+                  availableFindings: sounding.needsAttention.map((f) => ({ code: f.code, id: f.id, message: f.message })),
+                }),
+              },
+            ],
+            isError: true,
+          };
+        }
+        return {
+          content: [{ type: "text", text: JSON.stringify(exp, null, 2) }],
         };
       }
 
