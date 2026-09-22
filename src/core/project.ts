@@ -16,12 +16,19 @@ const DEFAULT_IGNORE = [
   "tests",
 ];
 
+export async function getWorkspaceFiles(
+  root: string,
+  config?: FathomConfig,
+): Promise<string[]> {
+  const ignore = new Set([...(config?.ignore ?? DEFAULT_IGNORE)]);
+  return walkFiles(root, root, ignore);
+}
+
 export async function createProjectContext(
   root: string,
   config?: FathomConfig,
 ): Promise<ProjectContext> {
-  const ignore = new Set([...(config?.ignore ?? DEFAULT_IGNORE)]);
-  const files = await walkFiles(root, root, ignore);
+  const files = await getWorkspaceFiles(root, config);
 
   return {
     root,

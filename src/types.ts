@@ -195,3 +195,91 @@ export interface FindingExplanation {
   provenance: string;
 }
 
+// ────────────────────────────────────────────────────────────
+// v0.5 — Deep Project Understanding Types
+// ────────────────────────────────────────────────────────────
+
+export interface SourceImport {
+  specifier: string;
+  symbols: string[];
+  isDefault: boolean;
+  isNamespace: boolean;
+  isDynamic: boolean;
+  line: number;
+}
+
+export interface SourceExport {
+  name: string;
+  kind: "function" | "class" | "interface" | "type" | "const" | "default" | "unknown";
+  line: number;
+}
+
+export interface SourceRoute {
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "ALL" | "USE";
+  path: string;
+  line: number;
+}
+
+export interface SourceSymbolSummary {
+  filePath: string;
+  imports: SourceImport[];
+  exports: SourceExport[];
+  routes: SourceRoute[];
+  envVars: string[];
+}
+
+export type GraphNodeType = "file" | "package" | "route" | "config" | "test";
+export type GraphEdgeType = "imports" | "exports_to" | "tested_by" | "documented_in";
+
+export interface GraphNode {
+  id: string; // relative path or package name
+  label: string;
+  type: GraphNodeType;
+  domain?: SemanticDomain;
+  exportsCount: number;
+  importsCount: number;
+}
+
+export interface GraphEdge {
+  from: string;
+  to: string;
+  type: GraphEdgeType;
+  symbols?: string[];
+}
+
+export interface CycleFinding {
+  cycle: string[];
+  length: number;
+}
+
+export interface OrphanFinding {
+  filePath: string;
+  domain: SemanticDomain;
+}
+
+export interface ArchitectureGraph {
+  generatedAt: string;
+  root: string;
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  metrics: {
+    totalModules: number;
+    totalEdges: number;
+    cycles: CycleFinding[];
+    orphans: OrphanFinding[];
+  };
+}
+
+export interface TestCoverageMapping {
+  sourceFile: string;
+  testFiles: string[];
+  isCovered: boolean;
+}
+
+export interface DocDriftFinding {
+  symbolOrPath: string;
+  sourceFile: string;
+  missingInDocs: string[];
+  detail: string;
+}
+

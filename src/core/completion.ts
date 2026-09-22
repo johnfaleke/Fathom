@@ -120,6 +120,15 @@ export function buildExplanation(
   } else if (finding.category === "dependencies") {
     riskLevel = "high";
     riskDescription = "Undeclared dependencies cause module not found errors when installed on fresh machines.";
+  } else if (finding.category === "architecture") {
+    riskLevel = "high";
+    riskDescription = "Circular dependencies or module coupling degrade maintainability and break module initialization.";
+  } else if (finding.category === "testing") {
+    riskLevel = "medium";
+    riskDescription = "Untested business logic changes introduce risk of silent regression.";
+  } else if (finding.category === "documentation") {
+    riskLevel = "medium";
+    riskDescription = "Stale or missing documentation creates confusion for collaborators and AI agents.";
   } else if (finding.severity === "warning") {
     riskLevel = "medium";
     riskDescription = "Requires developer attention before merge.";
