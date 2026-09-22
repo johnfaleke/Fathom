@@ -314,6 +314,66 @@ export function renderExplanation(exp: FindingExplanation): string {
   return lines.join("\n") + "\n";
 }
 
+export function renderArchitectureGraph(graph: any, filterDomain?: string): string {
+  const lines: string[] = [
+    "FATHOM / ARCHITECTURE GRAPH",
+    "────────────────────────────────────────────────────────────",
+    "",
+    `Modules: ${graph.metrics.totalModules} · Edges: ${graph.metrics.totalEdges}`,
+    "",
+  ];
+
+  // Group nodes by domain
+  const domainBuckets = new Map<string, any[]>();
+  for (const node of graph.nodes) {
+    if (filterDomain && node.domain !== filterDomain && node.type !== "package") {
+      continue;
+    }
+    const bucketKey = node.domain ? titleCase(node.domain) : node.type === "package" ? "External Packages" : "Other";
+    const list = domainBuckets.get(bucketKey) || [];
+    list.push(node);
+    domainBuckets.set(bucketKey, list);
+  }
+
+  for (const [domainLabel, nodes] of domainBuckets.entries()) {
+    lines.push(`${domainLabel} (${nodes.length})`);
+    for (const node of nodes.slice(0, 8)) {
+      const outEdges = graph.edges.filter((e: any) => e.from === node.id);
+      const outSummary = outEdges.length > 0 ? ` -> [${outEdges.map((e: any) => e.to.split("/").pop()).slice(0, 3).join(", ")}${outEdges.length > 3 ? "..." : ""}]` : "";
+      lines.push(`  • ${node.id}${outSummary}`);
+    }
+    if (nodes.length > 8) {
+      lines.push(`  … and ${nodes.length - 8} more`);
+    }
+    lines.push("");
+  }
+
+  // Cycles
+  lines.push("CYCLIC DEPENDENCY CHECK");
+  if (graph.metrics.cycles.length === 0) {
+    lines.push("  ✓ 0 circular dependencies detected.");
+  } else {
+    for (const c of graph.metrics.cycles) {
+      lines.push(`  ⚠ Cycle: ${c.cycle.join(" -> ")}`);
+    }
+  }
+  lines.push("");
+
+  // Orphans
+  if (graph.metrics.orphans.length > 0) {
+    lines.push("ORPHANED MODULES");
+    for (const o of graph.metrics.orphans.slice(0, 5)) {
+      lines.push(`  ○ ${o.filePath} (${o.domain})`);
+    }
+    if (graph.metrics.orphans.length > 5) {
+      lines.push(`  … and ${graph.metrics.orphans.length - 5} more`);
+    }
+    lines.push("");
+  }
+
+  return lines.join("\n") + "\n";
+}
+
 function titleCase(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }

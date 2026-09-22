@@ -9,8 +9,9 @@ import { cmdConfig } from "./commands/config.js";
 import { cmdSetup } from "./commands/setup.js";
 import { cmdScan } from "./commands/scan.js";
 import { cmdMCP } from "./commands/mcp.js";
+import { runGraphCommand } from "./commands/graph.js";
 
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
 
 function printHelp(): void {
   console.log(`fathom ${VERSION}
@@ -23,7 +24,9 @@ Usage:
 Commands:
   status [--json]                 Automatic project sounding: objective, semantic map, drift
   explain [<finding-id>] [--json] Inspect deterministic evidence coordinates and risk
-  check [options]                 Verify wiring integrity (env vars, dependencies)
+  graph [--format text|json|mermaid] [--filter <domain>]
+                                  Visual architecture graph and circular dependency analysis
+  check [options]                 Verify wiring integrity (env vars, dependencies, doc drift)
   diff [--json]                   Semantic change summary grouped by project domain
   scan [--json]                   Rebuild the local Project Model (.fathom/model.json)
   init [--json]                   Initialize Fathom in the current workspace
@@ -88,6 +91,13 @@ async function main(): Promise<void> {
       break;
     case "explain":
       process.exitCode = await cmdExplain(process.cwd(), args[1], { json });
+      break;
+    case "graph":
+      process.exitCode = await runGraphCommand(process.cwd(), {
+        json,
+        format: parseOption(args.slice(1), "--format") as any,
+        filter: parseOption(args.slice(1), "--filter"),
+      });
       break;
     case "diff":
       process.exitCode = await cmdDiff(process.cwd(), { json });
