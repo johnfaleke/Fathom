@@ -1,3 +1,12 @@
+// Vercel Web Analytics custom event tracker
+function trackEvent(name, data = {}) {
+  if (typeof window.va === "function") {
+    try {
+      window.va("event", { name, ...data });
+    } catch {}
+  }
+}
+
 // Theme switcher
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeLabel = document.querySelector("[data-theme-label]");
@@ -30,6 +39,7 @@ themeToggle?.addEventListener("change", () => {
     localStorage.setItem("fathom-theme", nextTheme);
   } catch {}
   applyTheme(nextTheme);
+  trackEvent("toggle_theme", { theme: nextTheme });
 });
 
 // Auto-adapt to OS/system settings changes on mobile and devices without manual override
@@ -47,10 +57,12 @@ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e)
 document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
     const original = button.textContent;
+    const commandText = button.dataset.copy || "";
     try {
-      await navigator.clipboard.writeText(button.dataset.copy || "");
+      await navigator.clipboard.writeText(commandText);
       button.textContent = "copied ✓";
       button.style.color = "var(--acid)";
+      trackEvent("copy_command", { command: commandText.slice(0, 50) });
     } catch {
       button.textContent = "select manually";
     }
@@ -72,6 +84,8 @@ function activateDocTab(tabId, shouldScroll = false) {
   const targetButton = document.querySelector(`[data-tab-target="${targetId}"]`);
 
   if (!targetPanel || !targetButton) return;
+
+  trackEvent("switch_doc_tab", { tab: targetId });
 
   tabButtons.forEach((btn) => {
     const isActive = btn === targetButton;
@@ -169,6 +183,23 @@ function handleHashChange() {
 
 window.addEventListener("hashchange", handleHashChange);
 handleHashChange();
+
+// Track key outgoing navigation & action links with Vercel Web Analytics
+document.querySelectorAll("a[href^='http'], a[href^='#']").forEach((link) => {
+  link.addEventListener("click", () => {
+    const href = link.getAttribute("href") || "";
+    const text = (link.textContent || "").trim().slice(0, 30);
+    if (href.includes("github.com/johnfaleke/Fathom")) {
+      trackEvent("click_github", { label: text });
+    } else if (href.includes("github.com/sponsors")) {
+      trackEvent("click_sponsor", { label: text });
+    } else if (href.includes("llms.txt")) {
+      trackEvent("click_llms_txt");
+    } else if (href === "#install") {
+      trackEvent("click_install_cta", { label: text });
+    }
+  });
+});
 
 // Scroll reveal animation observer across the site
 const revealItems = document.querySelectorAll(".reveal");
