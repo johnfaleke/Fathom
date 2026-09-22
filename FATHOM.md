@@ -530,19 +530,27 @@ useful on its own.
   - Dependency relationships (circular imports, undeclared packages, dead internal modules)
   - Test coverage relationships (source logic/API changes mapped to test assertions)
 
-### v0.6 — Agent-Native
+### v0.6 — Public Launch: The Reality Layer for Software
 
-- First-class Model Context Protocol (MCP) server & client abstractions
-- Agents consume and update project state directly
-- Automatic post-agent sounding and validation
-- Agent handoff and structured context preservation
+> **"Git tells you what moved. Fathom tells you what it means."**  
+> Fathom is the reality layer for human and AI-generated software. v0.5 proved the architecture; v0.6 proves the product on real, unfamiliar repositories.
 
-### v1.0 — Ecosystem
+- **Zero-Friction Front Door**: `npx @johnfaleke/fathom` or `fathom status` works instantly on any repository with zero prior setup or manual work-state maintenance.
+- **The 5 Launch Pillars**:
+  1. **`fathom status` (Soundings)**: Instant objective reconstruction, semantic domain clustering, likely completed milestones, and actionable attention items.
+  2. **`fathom check` (Deterministic & Trustworthy)**: Cross-artifact gating across Configuration (missing `.env.example`/docs), Dependencies (undeclared imports, circular chains, orphaned modules), Documentation (drift detection), and Tests (uncovered logic modifications).
+  3. **`fathom diff` (Semantic Diff)**: Answers *"What changed about the software?"* rather than merely listing lines of code.
+  4. **Agent & MCP Protocol**: Standardized agent consultation loop (`fathom_status` before work $\rightarrow$ `fathom_diff` during work $\rightarrow$ `fathom_check` before declaring complete) with strict machine-readable JSON contracts.
+  5. **Extensible Architecture**: Clean, hackable pipeline (`Observation → Evidence → Claim → Project Model → Finding → Interface`) allowing contributors to author new language extractors and custom checks in ~20 lines.
+- **The Launch Gate**: Verified on 10+ real-world repositories (Node/TS, Python, React, Next.js, monorepos, CLIs), 100% deterministic test coverage across Node 18, 20, 22, 24, and full CI self-dogfooding.
 
-- Turn-key GitHub Action (`fathom-action`)
-- VS Code & Cursor extensions and status-bar soundings
-- Community plugins and check packs
-- Stable, frozen Project Model schema
+### v1.0 — Ecosystem & Continuous Intelligence
+
+- Turn-key GitHub Action (`fathom-action`) with PR review bot integrations
+- IDE extensions (VS Code, Cursor, JetBrains) with real-time status-bar soundings
+- Community plugins and framework-specific check packs (Django, Fastify, Next.js, Prisma)
+- Stable, frozen Project Model schema with cross-repo workspace federation
+
 
 ---
 
