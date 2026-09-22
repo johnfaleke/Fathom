@@ -40,5 +40,8 @@ jobs:
       - name: Run test suite
         run: npm test
 
+      - name: Initialize Fathom workspace
+        run: node dist/cli.js init
+
       - name: Run Fathom self-check
         run: node dist/cli.js check --format github
