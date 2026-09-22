@@ -486,16 +486,15 @@ it is correct, automatable, and policy-friendly.
 Scope discipline is what makes an open-source project last. Each stage is shippable and
 useful on its own.
 
-### v0.1 — Deterministic core
+### v0.1 — Deterministic Core
 
 - `fathom init`, `fathom status`, `fathom diff`, `fathom check`
 - Work State schema, versioned and documented
-- A set of provably-correct cross-artifact checks (env vars, dependencies, config,
-  missing tests/docs)
+- A set of provably-correct cross-artifact checks (env vars, dependencies, config, missing tests/docs)
 - Public check interface, with a documented "add a check" path
 - Local-only. No LLM required to get value.
 
-### v0.2 — Interpretation, carefully
+### v0.2 — Interpretation, Carefully
 
 - Opt-in OpenAI-compatible provider interface
 - Named profiles for OpenAI and custom-compatible endpoints
@@ -505,18 +504,45 @@ useful on its own.
 - Explicit, inspectable file filtering for anything sent to a model
 - Versioned Project Model with observations, evidence, and claims
 
-### v0.3 — Automation surfaces
+### v0.3 — Automation Surfaces
 
 - Machine-readable output (`--json`) across all commands (`init`, `set`, `status`, `diff`, `check`, `scan`, `setup`, `config`, `interpret`)
 - CI usage, gating (`--max-attention <N>`, `--fail-on <severity>`), and deterministic exit codes
 - Native GitHub Actions PR annotations (`--format github`)
 - Markdown summary tables for CI step summaries and PR comments (`--format markdown`)
 
-### Ecosystem & Agent Surfaces
+### v0.4 — Automatic Project Understanding
 
-- Standard Model Context Protocol (`fathom mcp`) server enabling agents to inspect and update Work State
-- Editor integrations and JSON-RPC tool access
-- Agent-native Work State bidirectional reading and writing
+- Infer current work from Git (branch naming conventions, commit clusters, working tree diffs)
+- Semantic diff and project-area domain mapping (`api`, `database`, `logic`, `config`, `tests`, `docs`, `tooling`)
+- Completion evidence and likely completed items
+- Automatic findings with stable IDs (`FND-01`, `FND-02`)
+- Claims, evidence, and deterministic provenance
+- Reconstructed `fathom status` (Soundings) with objective confidence
+- Deterministic exploration with `fathom explain <finding-id>`
+
+### v0.5 — Deep Project Understanding
+
+- Lightweight static AST and symbol extraction (imports, exports, routes, schemas, env access)
+- Architecture graph (`fathom graph`) with cycle detection and orphan module analysis
+- Cross-artifact checks:
+  - Documentation drift (code changes without updating docs/README)
+  - Dependency relationships (circular imports, undeclared packages, dead internal modules)
+  - Test coverage relationships (source logic/API changes mapped to test assertions)
+
+### v0.6 — Agent-Native
+
+- First-class Model Context Protocol (MCP) server & client abstractions
+- Agents consume and update project state directly
+- Automatic post-agent sounding and validation
+- Agent handoff and structured context preservation
+
+### v1.0 — Ecosystem
+
+- Turn-key GitHub Action (`fathom-action`)
+- VS Code & Cursor extensions and status-bar soundings
+- Community plugins and check packs
+- Stable, frozen Project Model schema
 
 ---
 
