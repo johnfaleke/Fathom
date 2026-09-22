@@ -32,6 +32,17 @@ themeToggle?.addEventListener("change", () => {
   applyTheme(nextTheme);
 });
 
+// Auto-adapt to OS/system settings changes on mobile and devices without manual override
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+  try {
+    if (!localStorage.getItem("fathom-theme")) {
+      applyTheme(e.matches ? "dark" : "light");
+    }
+  } catch {
+    applyTheme(e.matches ? "dark" : "light");
+  }
+});
+
 // Copy to clipboard buttons
 document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
