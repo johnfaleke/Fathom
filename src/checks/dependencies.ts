@@ -37,6 +37,9 @@ export const dependencyCheck: Check = {
 
     for (const file of ctx.files) {
       if (!CODE_EXT.test(file)) continue;
+      if (file.startsWith("tests/") || file.startsWith("test/") || file.includes(".test.") || file.includes(".spec.")) {
+        continue;
+      }
       const text = await ctx.readText(file);
       if (!text) continue;
 

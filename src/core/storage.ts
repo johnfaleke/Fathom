@@ -40,19 +40,26 @@ export async function initFathom(root: string): Promise<void> {
   await writeFile(paths.config, JSON.stringify(config, null, 2) + "\n", "utf8");
   await writeFile(paths.state, JSON.stringify(state, null, 2) + "\n", "utf8");
   await writeFile(paths.events, "", "utf8");
-  await writeFile(
-    envExamplePath,
-    [
-      "# Copy this file to .env and replace placeholders with real values.",
-      "# Fathom uses this file as the canonical environment reference.",
-      "",
-      "# Example variables",
-      "PORT=3000",
-      "NODE_ENV=development",
-      "",
-    ].join("\n") + "\n",
-    "utf8",
-  );
+
+  try {
+    await access(envExamplePath);
+  } catch {
+    await writeFile(
+      envExamplePath,
+      [
+        "# Copy this file to .env and replace placeholders with real values.",
+        "# Fathom uses this file as the canonical environment reference.",
+        "",
+        "# Example variables",
+        "PORT=3000",
+        "NODE_ENV=development",
+        "FATHOM_AI_MODEL=",
+        "FATHOM_AI_BASE_URL=",
+        "",
+      ].join("\n") + "\n",
+      "utf8",
+    );
+  }
   await appendEvent(root, {
     type: "init",
     at: new Date().toISOString(),

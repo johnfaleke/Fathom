@@ -25,7 +25,7 @@
     "fathom": "tsx src/cli.ts",
     "start": "node dist/cli.js",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/**/*.test.ts",
+    "test": "tsx --test tests/*.test.ts",
     "prepublishOnly": "npm run build && npm test"
   },
   "engines": {
