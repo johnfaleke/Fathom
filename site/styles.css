@@ -18,6 +18,7 @@
   --card-paper: #fffdf8;
   --button-dark-bg: #171918;
   --button-dark-text: #fffdf8;
+  --brand: "Syne", "Space Grotesk", sans-serif;
   --mono: "DM Mono", monospace;
   --sans: "Space Grotesk", sans-serif;
 }
@@ -25,22 +26,22 @@
 [data-theme="dark"] {
   --paper: #111514;
   --paper-deep: #19201d;
-  --ink: #eef2e9;
-  --muted: #a2aba2;
-  --line: rgba(238, 242, 233, 0.16);
-  --blue: #3d6bff;
-  --blue-deep: #294ecd;
+  --ink: #f4f7f0;
+  --muted: #a8b3a8;
+  --line: rgba(244, 247, 240, 0.16);
+  --blue: #4a78ff;
+  --blue-deep: #325fe8;
   --blue-soft: #d9e3ff;
   --acid: #cbf26b;
   --acid-soft: rgba(203, 242, 107, 0.14);
-  --amber: #f29f4b;
-  --white: #f6f8f1;
-  --surface-strong: #1a221f;
-  --surface-text: #f6f8f1;
-  --surface-muted: #aeb9ae;
-  --surface-line: rgba(238, 242, 233, 0.15);
-  --card-paper: #1b2320;
-  --button-dark-bg: #eef2e9;
+  --amber: #f5a452;
+  --white: #ffffff;
+  --surface-strong: #171f1c;
+  --surface-text: #f4f7f0;
+  --surface-muted: #a8b3a8;
+  --surface-line: rgba(244, 247, 240, 0.15);
+  --card-paper: #18221e;
+  --button-dark-bg: #f4f7f0;
   --button-dark-text: #111514;
 }
 
@@ -105,32 +106,50 @@ a {
   box-sizing: border-box;
   backdrop-filter: blur(8px);
 }
-  backdrop-filter: blur(8px);
-}
 
 .wordmark {
   display: inline-flex;
   align-items: center;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
   gap: 10px;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.12em;
-  transition: transform 0.2s ease;
+  font-family: var(--brand);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  flex-shrink: 0;
+  line-height: 1;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .wordmark:hover {
   transform: translateY(-1px);
+  color: var(--blue);
 }
 
 .wordmark-mark {
   display: grid;
   place-items: center;
-  width: 29px;
-  height: 29px;
+  width: 28px;
+  height: 28px;
   background: var(--ink);
   color: var(--acid);
-  font-size: 18px;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+[data-theme="dark"] .wordmark-mark {
+  background: var(--surface-strong);
+  color: var(--acid);
+  border: 1px solid var(--line);
 }
 
 .main-nav {
@@ -370,26 +389,59 @@ a {
 
 .button-outline {
   background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
-.button-outline:hover {
-  background: var(--acid);
-  border-color: var(--acid);
-  color: var(--ink);
+[data-theme="dark"] .button-outline {
+  background: transparent;
+  color: #f4f7f0 !important;
+  border-color: rgba(244, 247, 240, 0.38) !important;
+}
+
+.button-outline:hover,
+.button-outline.button-github:hover,
+[data-theme="dark"] .button-outline:hover,
+[data-theme="dark"] .button-outline.button-github:hover {
+  background: var(--acid) !important;
+  border-color: var(--acid) !important;
+  color: #111514 !important;
   box-shadow: 0 10px 26px -4px rgba(203, 242, 107, 0.55);
 }
 
+.button-outline:hover svg,
+.button-outline:hover .github-icon,
+.button-outline:hover .icon-inline,
+[data-theme="dark"] .button-outline:hover svg,
+[data-theme="dark"] .button-outline:hover .github-icon,
+[data-theme="dark"] .button-outline:hover .icon-inline {
+  stroke: #111514 !important;
+  fill: #111514 !important;
+  color: #111514 !important;
+}
+
 .button-light {
-  background: var(--acid);
-  border-color: var(--acid);
-  color: var(--ink);
+  background: var(--acid) !important;
+  border-color: var(--acid) !important;
+  color: #111514 !important;
+  font-weight: 700;
   box-shadow: 0 4px 14px rgba(203, 242, 107, 0.3);
 }
 
+.button-light svg,
+.button-light .github-icon,
+.button-light .icon-inline,
+.button-light span {
+  color: #111514 !important;
+  fill: #111514 !important;
+  stroke: #111514 !important;
+}
+
 .button-light:hover {
-  background: #d8f788;
-  border-color: #d8f788;
+  background: #d8f788 !important;
+  border-color: #d8f788 !important;
+  color: #111514 !important;
   box-shadow: 0 12px 28px -6px rgba(203, 242, 107, 0.6);
 }
 
@@ -1167,8 +1219,9 @@ pre {
 }
 
 .docs-nav-link.active .tab-badge {
-  background: var(--acid);
-  color: var(--ink);
+  background: var(--acid) !important;
+  color: #111514 !important;
+  font-weight: 700;
 }
 
 .docs-nav-link:hover .tab-badge {
@@ -1334,12 +1387,14 @@ pre {
 .check-icon {
   display: grid;
   place-items: center;
-  flex: 0 0 38px;
+  flex: 0 0 42px;
   height: 38px;
-  background: var(--acid);
-  color: var(--ink);
-  font: 10px var(--mono);
-  font-weight: 600;
+  background: var(--acid) !important;
+  color: #111514 !important;
+  font: 11px var(--mono);
+  font-weight: 700 !important;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
 }
 
 .check-item strong {
