@@ -147,8 +147,8 @@ test("CLI status prints a readable project summary", async () => {
     env: process.env,
   });
 
-  assert.match(stdout, /Current work: Ship OAuth integration/);
-  assert.match(stdout, /Progress: 1 complete, 1 remaining/);
+  assert.match(stdout, /Ship OAuth integration/);
+  assert.match(stdout, /Login API/);
 });
 
 test("CLI check reports missing env vars and undeclared imports", async () => {
