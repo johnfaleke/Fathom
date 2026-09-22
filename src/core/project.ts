@@ -13,6 +13,7 @@ const DEFAULT_IGNORE = [
   "build",
   ".turbo",
   ".cache",
+  "tests",
 ];
 
 export async function createProjectContext(
