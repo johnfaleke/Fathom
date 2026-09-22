@@ -190,3 +190,38 @@ test("CLI check reports missing env vars and undeclared imports", async () => {
   assert.ok(ids.includes("deps.undeclared-import"));
   assert.ok(parsed.attention >= 2);
 });
+
+test("CLI graph renders architecture tree and mermaid format", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-graph-"));
+  mkdirSync(path.join(tempDir, "src"), { recursive: true });
+
+  writeFileSync(
+    path.join(tempDir, "src", "index.ts"),
+    "import { helper } from './utils.js';\nhelper();\n",
+  );
+  writeFileSync(
+    path.join(tempDir, "src", "utils.ts"),
+    "export function helper() {}\n",
+  );
+
+  const { stdout: textOut } = await execFileAsync(process.execPath, [cliPath, "graph"], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  assert.match(textOut, /FATHOM \/ ARCHITECTURE GRAPH/);
+  assert.match(textOut, /Modules: 2/);
+  assert.match(textOut, /0 circular dependencies/);
+
+  const { stdout: mermaidOut } = await execFileAsync(
+    process.execPath,
+    [cliPath, "graph", "--format", "mermaid"],
+    {
+      cwd: tempDir,
+      env: process.env,
+    },
+  );
+
+  assert.match(mermaidOut, /graph TD/);
+  assert.match(mermaidOut, /src_index_ts/);
+});

@@ -79,7 +79,7 @@ test("MCP server lifecycle: initialize, tools/list, resources/list, tools/call, 
     });
 
     assert.equal(initRes.result.serverInfo.name, "fathom");
-    assert.equal(initRes.result.serverInfo.version, "0.4.0");
+    assert.equal(initRes.result.serverInfo.version, "0.5.0");
     assert.ok(initRes.result.capabilities.tools);
     assert.ok(initRes.result.capabilities.resources);
 
@@ -93,6 +93,7 @@ test("MCP server lifecycle: initialize, tools/list, resources/list, tools/call, 
     const toolNames = toolsRes.result.tools.map((t: any) => t.name);
     assert.ok(toolNames.includes("fathom_status"));
     assert.ok(toolNames.includes("fathom_explain"));
+    assert.ok(toolNames.includes("fathom_graph"));
     assert.ok(toolNames.includes("fathom_scan"));
     assert.ok(toolNames.includes("fathom_check"));
     assert.ok(toolNames.includes("fathom_set_work"));
@@ -108,6 +109,7 @@ test("MCP server lifecycle: initialize, tools/list, resources/list, tools/call, 
 
     const resourceUris = resList.result.resources.map((r: any) => r.uri);
     assert.ok(resourceUris.includes("fathom://sounding"));
+    assert.ok(resourceUris.includes("fathom://graph"));
     assert.ok(resourceUris.includes("fathom://state"));
     assert.ok(resourceUris.includes("fathom://model"));
     assert.ok(resourceUris.includes("fathom://config"));
