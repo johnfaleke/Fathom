@@ -19,7 +19,9 @@ export async function checkDocumentationDrift(
   changedFiles: string[],
   fileContents?: Map<string, string>
 ): Promise<FindingWithCode[]> {
-  const docFiles = files.filter(f => f.endsWith(".md") || f.endsWith(".txt") || f.startsWith("docs/"));
+  const docFiles = files.filter(
+    f => f.endsWith(".md") || f.endsWith(".txt") || f.startsWith("docs/") || f.endsWith(".env.example") || f === ".env.example"
+  );
   if (docFiles.length === 0) return [];
 
   // Read all documentation content

@@ -69,3 +69,9 @@ API keys are read from the named environment variable and are never written to
 valuable credentials are present in your shell environment. Use plain `fathom check`
 for untrusted code, or inspect the configuration and run `fathom setup` yourself
 before enabling AI.
+
+### Environment variables
+
+- `FATHOM_AI_MODEL`: Fallback model name for AI interpretation when not explicitly set in profile.
+- `FATHOM_AI_BASE_URL`: Fallback endpoint base URL for custom or local AI inference.
+

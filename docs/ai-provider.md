@@ -114,6 +114,12 @@ fathom config set ai.profiles.local.apiKeyEnv LOCAL_AI_KEY
 Use `fathom config show` to inspect profile metadata. API keys are resolved from
 the configured environment variable and are never stored in project config.
 
+### Environment variables
+
+- `FATHOM_AI_MODEL`: Optional environment variable to set or override the default model name (defaults to `gpt-4o-mini`).
+- `FATHOM_AI_BASE_URL`: Optional environment variable to set or override the AI endpoint base URL (for custom or local OpenAI-compatible proxies).
+
+
 ## Safe context filtering
 
 ```ts
