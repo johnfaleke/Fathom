@@ -1,6 +1,6 @@
 import type { AIInterpretationResult } from "../ai/provider.js";
 import type { SafeAIContext } from "../ai/context.js";
-import type { Finding, WorkState } from "../types.js";
+import type { Finding, FindingExplanation, ProjectSounding, WorkState } from "../types.js";
 
 export function renderInterpretation(result: AIInterpretationResult, context: SafeAIContext): string {
   const lines = [
@@ -213,6 +213,107 @@ export function renderMarkdownSummary(
   return lines.join("\n") + "\n";
 }
 
+export function renderSounding(sounding: ProjectSounding): string {
+  const lines: string[] = [
+    "FATHOM / SOUNDING",
+    "────────────────────────────────────────────────────────────",
+    "",
+    "OBJECTIVE",
+    sounding.objective.title,
+    `Confidence: ${Math.round(sounding.objective.confidence * 100)}%`,
+  ];
+
+  if (sounding.objective.evidence.length > 0) {
+    lines.push("Evidence:");
+    for (const ev of sounding.objective.evidence) {
+      lines.push(`  • ${ev}`);
+    }
+  }
+  lines.push("");
+
+  if (sounding.semanticMap.length > 0) {
+    lines.push("SEMANTIC MAP");
+    for (const group of sounding.semanticMap) {
+      lines.push(`${group.label} (${group.count} file${group.count > 1 ? "s" : ""})`);
+      for (const f of group.files.slice(0, 4)) {
+        const roleStr = f.role ? ` (${f.role})` : "";
+        lines.push(`  + ${f.path}${roleStr}`);
+      }
+      if (group.files.length > 4) {
+        lines.push(`  … and ${group.files.length - 4} more`);
+      }
+    }
+    lines.push("");
+  }
+
+  if (sounding.likelyComplete.length > 0) {
+    lines.push("LIKELY COMPLETE");
+    for (const item of sounding.likelyComplete) {
+      lines.push(`✓ ${item.title}`);
+    }
+    lines.push("");
+  }
+
+  if (sounding.needsAttention.length > 0) {
+    lines.push("NEEDS ATTENTION");
+    for (const f of sounding.needsAttention) {
+      const mark = f.severity === "potential" ? "○" : "⚠";
+      lines.push(`${mark} [${f.code}] ${f.message}`);
+      for (const e of f.evidence.slice(0, 2)) {
+        const loc = e.path ? `      ${e.path}: ` : "      ";
+        lines.push(`${loc}${e.detail}`);
+      }
+    }
+    lines.push("");
+    lines.push("Run `fathom explain <id>` to inspect deterministic evidence.");
+    lines.push("");
+  } else {
+    lines.push("NEEDS ATTENTION");
+    lines.push("  Nothing requires immediate attention.");
+    lines.push("");
+  }
+
+  lines.push("PROJECT DRIFT");
+  lines.push(
+    `  ${sounding.projectDrift.inconsistenciesCount} finding(s) · ${sounding.projectDrift.filesChangedCount} file(s) tracked/changed · ${sounding.projectDrift.commitCount} commit(s)`,
+  );
+
+  return lines.join("\n") + "\n";
+}
+
+export function renderExplanation(exp: FindingExplanation): string {
+  const lines: string[] = [
+    `EVIDENCE REPORT: [${exp.code}]`,
+    "────────────────────────────────────────────────────────────",
+    "",
+    "Finding:",
+    `  ${exp.title}`,
+    "",
+    "Category:",
+    `  ${titleCase(exp.category)} · Severity: ${exp.severity.toUpperCase()}`,
+    "",
+    "Claim:",
+    `  ${exp.claim}`,
+    "",
+    "Evidence Coordinates:",
+  ];
+
+  for (const e of exp.evidence) {
+    const loc = e.path ? `  • ${e.path}: ` : "  • ";
+    lines.push(`${loc}${e.detail}`);
+  }
+  lines.push("");
+
+  lines.push("Risk Assessment:");
+  lines.push(`  ${exp.riskLevel.toUpperCase()} — ${exp.riskDescription}`);
+  lines.push("");
+
+  lines.push("Provenance:");
+  lines.push(`  ${exp.provenance}`);
+
+  return lines.join("\n") + "\n";
+}
+
 function titleCase(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -224,3 +325,4 @@ function wrapMessage(message: string): string {
     .filter(Boolean)
     .join("\n");
 }
+

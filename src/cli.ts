@@ -3,37 +3,36 @@ import { cmdInit } from "./commands/init.js";
 import { cmdCheck } from "./commands/check.js";
 import { cmdStatus } from "./commands/status.js";
 import { cmdDiff } from "./commands/diff.js";
+import { cmdExplain } from "./commands/explain.js";
 import { cmdInterpret } from "./commands/interpret.js";
 import { cmdConfig } from "./commands/config.js";
 import { cmdSetup } from "./commands/setup.js";
 import { cmdScan } from "./commands/scan.js";
 import { cmdMCP } from "./commands/mcp.js";
 
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 
 function printHelp(): void {
   console.log(`fathom ${VERSION}
 
-Understand the work — local-first Work State with evidence.
+Measure reality. Understand the change — local-first Project Model & State Ledger.
 
 Usage:
   fathom <command> [options]
 
 Commands:
-  init [--json]                   Initialize Fathom in the current project
+  status [--json]                 Automatic project sounding: objective, semantic map, drift
+  explain [<finding-id>] [--json] Inspect deterministic evidence coordinates and risk
+  check [options]                 Verify wiring integrity (env vars, dependencies)
+  diff [--json]                   Semantic change summary grouped by project domain
+  scan [--json]                   Rebuild the local Project Model (.fathom/model.json)
+  init [--json]                   Initialize Fathom in the current workspace
   set [--current <text>] [--complete <item>] [--incomplete <item>] 
-                                  Update the active work state
-  status [--json]                 Where does the project actually stand?
-  diff [--json]                   What meaningfully changed (git-backed in v0.1)
-  check [options]                 Find inconsistencies and forgotten wiring
-  check --ai [options]            Add opt-in provider interpretation
-  config show [--json]            Show local configuration
-  config set <key> <value> [--json]
-                                  Update AI profile configuration
-  setup [options]                 Guided AI setup for this workspace
-  scan [--json]                   Build the local Project Model
+                                  Manually record or update workspace objectives
   mcp                             Start Model Context Protocol (MCP) stdio server
-  interpret --provider openai     Opt-in AI interpretation with explicit consent
+  setup [options]                 Configure named AI provider profiles
+  config show | set <k> <v>       Inspect or update local profile configuration
+  check --ai [options]            Opt-in AI interpretation with explicit consent
 
 Automation & CI Options:
   --json                          Emit machine-readable JSON output
@@ -86,6 +85,9 @@ async function main(): Promise<void> {
         completed: statusOptions.completed,
         incomplete: statusOptions.incomplete,
       });
+      break;
+    case "explain":
+      process.exitCode = await cmdExplain(process.cwd(), args[1], { json });
       break;
     case "diff":
       process.exitCode = await cmdDiff(process.cwd(), { json });

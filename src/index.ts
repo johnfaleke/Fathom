@@ -12,13 +12,25 @@ export type {
   Claim,
   Observation,
   ProjectModel,
+  InferredObjective,
+  SemanticDomain,
+  SemanticFileEntry,
+  SemanticDomainGroup,
+  CompletionItem,
+  FindingWithCode,
+  ProjectSounding,
+  FindingExplanation,
 } from "./types.js";
-export { WORK_STATE_VERSION } from "./types.js";
-export { PROJECT_MODEL_VERSION } from "./types.js";
+export { WORK_STATE_VERSION, PROJECT_MODEL_VERSION } from "./types.js";
 export { builtinChecks } from "./checks/index.js";
 export { runChecks } from "./core/runner.js";
 export { createProjectContext } from "./core/project.js";
 export { buildProjectModel } from "./core/model.js";
+export { takeProjectSounding } from "./core/sounding.js";
+export { classifyFile, buildSemanticMap } from "./core/semantic-map.js";
+export { inferObjective, readGitSignals } from "./core/intent.js";
+export { inferCompletions, tagFindings, buildExplanation } from "./core/completion.js";
+export { FathomMCPServer } from "./mcp/server.js";
 export { collectSafeAIContext } from "./ai/context.js";
 export { OpenAIProvider } from "./ai/openai.js";
 export type { OpenAIProviderOptions } from "./ai/openai.js";
