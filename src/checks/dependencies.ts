@@ -1,14 +1,10 @@
 import { builtinModules } from "node:module";
 import type { Check, Finding, ProjectContext } from "../types.js";
+import { extractSourceSymbols } from "../core/ast.js";
 
 const NODE_BUILTINS = new Set(
   builtinModules.flatMap((m) => (m.startsWith("node:") ? [m.slice(5)] : [m])),
 );
-
-const IMPORT_FROM =
-  /(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?["']([^"']+)["']/g;
-const REQUIRE_CALL = /require\s*\(\s*["']([^"']+)["']\s*\)/g;
-const DYNAMIC_IMPORT = /import\s*\(\s*["']([^"']+)["']\s*\)/g;
 
 const CODE_EXT = /\.(?:[cm]?[jt]sx?|mjs|cjs)$/;
 
@@ -44,11 +40,8 @@ export const dependencyCheck: Check = {
       const text = await ctx.readText(file);
       if (!text) continue;
 
-      const specs = [
-        ...matchAll(text, IMPORT_FROM),
-        ...matchAll(text, REQUIRE_CALL),
-        ...matchAll(text, DYNAMIC_IMPORT),
-      ];
+      const symbols = extractSourceSymbols(file, text);
+      const specs = symbols.imports.map((imp) => imp.specifier);
 
       for (const spec of specs) {
         const name = packageName(spec);

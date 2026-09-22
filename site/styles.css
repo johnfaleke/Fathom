@@ -67,7 +67,6 @@ body {
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
-  overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
@@ -1160,7 +1159,9 @@ pre {
   flex-direction: column;
   gap: 12px;
   position: sticky;
-  top: 104px;
+  top: 28px;
+  align-self: start;
+  z-index: 5;
 }
 
 .docs-nav-link {

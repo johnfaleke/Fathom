@@ -201,7 +201,7 @@ export async function buildArchitectureGraph(
 
   for (const relPath of normalizedFiles) {
     // Only analyze code and script files
-    if (!relPath.match(/\.(ts|tsx|js|jsx|mjs|cjs|json)$/i)) {
+    if (!relPath.match(/\.(ts|tsx|js|jsx|mjs|cjs)$/i) || relPath.startsWith(".fathom/") || relPath.startsWith("dist/") || relPath.startsWith("site/")) {
       continue;
     }
 

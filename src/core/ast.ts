@@ -37,8 +37,8 @@ export function extractSourceSymbols(filePath: string, content: string): SourceS
     }
 
     // 2. IMPORTS
-    // ESM single-line import: import { a, b } from "specifier" or import Foo from "specifier"
-    const esmImportMatch = line.match(/^import\s+(?:(?:\*\s+as\s+(\w+))|(?:\{([^}]+)\})|([a-zA-Z0-9_$]+))?(?:\s*,\s*\{([^}]+)\})?\s*from\s*['"]([^'"]+)['"]/);
+    // ESM single-line import: import { a, b } from "specifier" or import type { Foo } from "specifier"
+    const esmImportMatch = line.match(/^import\s+(?:type\s+)?(?:(?:\*\s+as\s+(\w+))|(?:\{([^}]+)\})|([a-zA-Z0-9_$]+))?(?:\s*,\s*\{([^}]+)\})?\s*from\s*['"]([^'"]+)['"]/);
     if (esmImportMatch) {
       const namespace = esmImportMatch[1];
       const named1 = esmImportMatch[2];
