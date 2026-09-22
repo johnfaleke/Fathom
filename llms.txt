@@ -2,9 +2,9 @@
 
 > Measure reality. Understand the change.
 
-Current release: 0.4.0.
+Current release: 0.5.0.
 
-Fathom is an open-source, local-first CLI and MCP Server for Project Models and State Ledgers. It automatically reconstructs project reality, infers active objectives, groups changes into semantic software domains, deduces what is likely complete, and surfaces what doesn't line up with deterministic evidence.
+Fathom is an open-source, local-first CLI and MCP Server for Project Models and State Ledgers. It automatically reconstructs project reality, infers active objectives, groups changes into semantic software domains, deduces what is likely complete, builds static architecture graphs with circular dependency detection, and surfaces what doesn't line up with deterministic evidence.
 
 ## Canonical links
 
@@ -16,7 +16,7 @@ Fathom is an open-source, local-first CLI and MCP Server for Project Models and 
 ## Principles
 
 - Local-first: no account, cloud, or backend required.
-- Automatic understanding: reconstructs intent and domain maps from repository signals without requiring manual bookkeeping.
+- Deep understanding: lightweight static AST extraction, architecture graphs, and cross-artifact checks (doc drift, test relationships, circular dependencies).
 - Evidence before opinion: deterministic checks and explainability with exact file and line coordinates.
 - MCP Native: live stdio server providing tools and resources directly to AI coding agents.
 - Privacy-aware: zero telemetry; automatic secret redaction and binary filtering before any external AI transmission.
@@ -37,6 +37,7 @@ cd /path/to/project
 fathom init
 fathom status
 fathom explain FND-01
+fathom graph --format mermaid
 fathom check --format github
 ```
 
@@ -51,11 +52,13 @@ fathom mcp
 - Tools:
   - `fathom_status`: Inferred objective, semantic software map, completions, and findings.
   - `fathom_explain`: Deterministic evidence breakdown and risk report for a finding ID.
-  - `fathom_check`: Verification checks for environment variables and manifests.
+  - `fathom_graph`: Architecture graph with modules, edges, cycles, and orphans in JSON or Mermaid format.
+  - `fathom_check`: Verification checks for environment variables, documentation drift, and manifests.
   - `fathom_scan`: Rebuilds `.fathom/model.json`.
   - `fathom_diff`: Semantic project-level diff grouped by domain.
 - Resources:
   - `fathom://sounding`: Live sounding JSON.
+  - `fathom://graph`: Codebase dependency topology and architecture graph.
   - `fathom://model`: Project Model claim graph (`.fathom/model.json`).
   - `fathom://state`: Local state snapshot (`.fathom/state.json`).
   - `fathom://config`: Local configuration (`.fathom/config.json`).

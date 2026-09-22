@@ -182,7 +182,8 @@ jobs:
 | :--- | :--- |
 | `fathom status` | Automatic project sounding: objective, semantic map, completions, and drift |
 | `fathom explain <id>` | Inspect deterministic evidence coordinates and risk report for a finding |
-| `fathom check` | Verify project wiring integrity (`.env.example`, package manifests) |
+| `fathom graph` | Visual architecture graph, dependency tree, and circular import analysis |
+| `fathom check` | Deep cross-artifact checks (env vars, dependencies, doc drift, test relationships) |
 | `fathom diff` | Semantic change summary grouped by software domain |
 | `fathom scan` | Rebuild the local Project Model (`.fathom/model.json`) |
 | `fathom init` | Initialize Fathom in the current workspace |
