@@ -126,3 +126,72 @@ export interface CheckOptions {
   maxAttention?: number;
   failOn?: Severity;
 }
+
+export type SemanticDomain =
+  | "api"
+  | "database"
+  | "logic"
+  | "config"
+  | "tests"
+  | "docs"
+  | "tooling";
+
+export interface SemanticFileEntry {
+  path: string;
+  domain: SemanticDomain;
+  role?: string;
+  status?: "added" | "modified" | "deleted" | "untracked" | "tracked";
+}
+
+export interface SemanticDomainGroup {
+  domain: SemanticDomain;
+  label: string;
+  files: SemanticFileEntry[];
+  count: number;
+}
+
+export interface InferredObjective {
+  title: string;
+  confidence: number;
+  evidence: string[];
+  domain?: string;
+  source: "git" | "branch" | "files" | "manual";
+}
+
+export interface CompletionItem {
+  title: string;
+  confidence: number;
+  evidence: string[];
+  domain?: string;
+}
+
+export interface FindingWithCode extends Finding {
+  code: string;
+}
+
+export interface ProjectSounding {
+  generatedAt: string;
+  objective: InferredObjective;
+  semanticMap: SemanticDomainGroup[];
+  likelyComplete: CompletionItem[];
+  needsAttention: FindingWithCode[];
+  projectDrift: {
+    inconsistenciesCount: number;
+    filesChangedCount: number;
+    commitCount: number;
+  };
+}
+
+export interface FindingExplanation {
+  code: string;
+  id: string;
+  title: string;
+  category: string;
+  severity: Severity;
+  claim: string;
+  evidence: Evidence[];
+  riskLevel: "high" | "medium" | "low";
+  riskDescription: string;
+  provenance: string;
+}
+
