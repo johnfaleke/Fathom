@@ -105,6 +105,25 @@ export const MCP_TOOLS: MCPToolDefinition[] = [
     },
   },
   {
+    name: "fathom_graph",
+    description:
+      "Generate an evidence-backed Architecture Graph of the codebase: modules, imports, cyclic dependency analysis, and orphan module detection in JSON or Mermaid format.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        format: {
+          type: "string",
+          enum: ["json", "mermaid"],
+          description: "Output format for the architecture graph (default: json)",
+        },
+        filter: {
+          type: "string",
+          description: "Optional semantic domain filter (e.g. api, logic, database, config, tests)",
+        },
+      },
+    },
+  },
+  {
     name: "fathom_get_model",
     description:
       "Retrieve the durable Project Model (.fathom/model.json) containing indexed files, observations, and claims.",
@@ -274,6 +293,26 @@ export async function executeMCPTool(
         const summary = await gitDiffStat(absRoot);
         return {
           content: [{ type: "text", text: JSON.stringify({ files, summary }, null, 2) }],
+        };
+      }
+
+      case "fathom_graph": {
+        const { buildArchitectureGraph } = await import("../core/graph.js");
+        const { getWorkspaceFiles } = await import("../core/project.js");
+        const { renderMermaidGraph } = await import("../commands/graph.js");
+        const files = await getWorkspaceFiles(absRoot);
+        const graph = await buildArchitectureGraph(absRoot, files);
+        const format = typeof args.format === "string" ? args.format : "json";
+        const filter = typeof args.filter === "string" ? args.filter : undefined;
+
+        if (format === "mermaid") {
+          return {
+            content: [{ type: "text", text: renderMermaidGraph(graph, filter) }],
+          };
+        }
+
+        return {
+          content: [{ type: "text", text: JSON.stringify(graph, null, 2) }],
         };
       }
 

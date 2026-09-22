@@ -18,6 +18,12 @@ export const MCP_RESOURCES: MCPResourceDefinition[] = [
     mimeType: "application/json",
   },
   {
+    uri: "fathom://graph",
+    name: "Fathom Architecture Graph",
+    description: "Codebase dependency topology, module relationships, and cycle analysis",
+    mimeType: "application/json",
+  },
+  {
     uri: "fathom://state",
     name: "Fathom Work State",
     description: "The active project Work State snapshot (.fathom/state.json)",
@@ -57,6 +63,16 @@ export async function readMCPResource(
     const sounding = await takeProjectSounding(absRoot);
     return {
       contents: [{ uri, mimeType: "application/json", text: JSON.stringify(sounding, null, 2) }],
+    };
+  }
+
+  if (uri === "fathom://graph") {
+    const { buildArchitectureGraph } = await import("../core/graph.js");
+    const { getWorkspaceFiles } = await import("../core/project.js");
+    const files = await getWorkspaceFiles(absRoot);
+    const graph = await buildArchitectureGraph(absRoot, files);
+    return {
+      contents: [{ uri, mimeType: "application/json", text: JSON.stringify(graph, null, 2) }],
     };
   }
 
