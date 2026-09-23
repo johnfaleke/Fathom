@@ -225,3 +225,18 @@ test("CLI graph renders architecture tree and mermaid format", async () => {
   assert.match(mermaidOut, /graph TD/);
   assert.match(mermaidOut, /src_index_ts/);
 });
+
+test("CLI default execution runs sounding on uninitialized workspace", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-zero-config-"));
+  mkdirSync(path.join(tempDir, "src"), { recursive: true });
+  writeFileSync(path.join(tempDir, "src", "index.ts"), "console.log('hello');\n");
+
+  // Run CLI with no subcommand on raw directory
+  const { stdout } = await execFileAsync(process.execPath, [cliPath], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  assert.match(stdout, /FATHOM \/ SOUNDING/);
+});
+

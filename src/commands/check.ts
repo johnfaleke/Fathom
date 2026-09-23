@@ -25,14 +25,6 @@ export async function cmdCheck(
 ): Promise<number> {
   const root = path.resolve(cwd);
 
-  if (!(await isInitialized(root))) {
-    if (opts.format === "json" || opts.json) {
-      console.error(JSON.stringify({ error: "Fathom is not initialized. Run `fathom init` first." }));
-    } else {
-      console.error("Fathom is not initialized. Run `fathom init` first.");
-    }
-    return 1;
-  }
 
   const config = await loadConfig(root);
   const ctx = await createProjectContext(root, config);

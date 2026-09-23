@@ -11,18 +11,19 @@ import { cmdScan } from "./commands/scan.js";
 import { cmdMCP } from "./commands/mcp.js";
 import { runGraphCommand } from "./commands/graph.js";
 
-const VERSION = "0.5.0";
+const VERSION = "0.6.0";
 
 function printHelp(): void {
   console.log(`fathom ${VERSION}
 
-Measure reality. Understand the change — local-first Project Model & State Ledger.
+Git tells you what moved. Fathom tells you what it means.
+The project reality and verification layer for human and AI-generated software.
 
 Usage:
-  fathom <command> [options]
+  fathom [command] [options]
 
 Commands:
-  status [--json]                 Automatic project sounding: objective, semantic map, drift
+  status [--json]                 Automatic project sounding: objective, semantic map, drift (default)
   explain [<finding-id>] [--json] Inspect deterministic evidence coordinates and risk
   graph [--format text|json|mermaid] [--filter <domain>]
                                   Visual architecture graph and circular dependency analysis
@@ -53,14 +54,14 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const command = args[0];
 
-  const statusOptions = parseStatusOptions(args.slice(1));
+  const statusOptions = parseStatusOptions(args);
   const json = statusOptions.json || args.includes("--json");
-  const format = parseFormatOption(args.slice(1), json);
-  const maxAttentionRaw = parseOption(args.slice(1), "--max-attention");
+  const format = parseFormatOption(args, json);
+  const maxAttentionRaw = parseOption(args, "--max-attention");
   const maxAttention = maxAttentionRaw !== undefined ? Number(maxAttentionRaw) : undefined;
-  const failOn = parseOption(args.slice(1), "--fail-on") as ("info" | "potential" | "warning" | undefined);
+  const failOn = parseOption(args, "--fail-on") as ("info" | "potential" | "warning" | undefined);
 
-  if (!command || command === "-h" || command === "--help") {
+  if (command === "-h" || command === "--help") {
     printHelp();
     return;
   }
@@ -68,6 +69,16 @@ async function main(): Promise<void> {
     console.log(VERSION);
     return;
   }
+  if (!command || command.startsWith("-")) {
+    process.exitCode = await cmdStatus(process.cwd(), {
+      json,
+      current: statusOptions.current,
+      completed: statusOptions.completed,
+      incomplete: statusOptions.incomplete,
+    });
+    return;
+  }
+
 
   switch (command) {
     case "init":

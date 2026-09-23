@@ -141,22 +141,9 @@ export async function executeMCPTool(
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
   const absRoot = path.resolve(root);
 
-  if (!(await isInitialized(absRoot))) {
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify({
-            error: "Fathom is not initialized in this workspace. Run fathom init first.",
-          }),
-        },
-      ],
-      isError: true,
-    };
-  }
-
   try {
     const config = await loadConfig(absRoot);
+
 
     switch (toolName) {
       case "fathom_status": {

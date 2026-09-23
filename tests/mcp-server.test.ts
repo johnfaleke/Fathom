@@ -79,8 +79,9 @@ test("MCP server lifecycle: initialize, tools/list, resources/list, tools/call, 
     });
 
     assert.equal(initRes.result.serverInfo.name, "fathom");
-    assert.equal(initRes.result.serverInfo.version, "0.5.0");
+    assert.equal(initRes.result.serverInfo.version, "0.6.0");
     assert.ok(initRes.result.capabilities.tools);
+
     assert.ok(initRes.result.capabilities.resources);
 
     // 2. tools/list

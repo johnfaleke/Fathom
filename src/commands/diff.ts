@@ -9,10 +9,6 @@ export async function cmdDiff(
 ): Promise<number> {
   const root = path.resolve(cwd);
 
-  if (!(await isInitialized(root))) {
-    console.error("Fathom is not initialized. Run `fathom init` first.");
-    return 1;
-  }
 
   if (!(await gitIsRepo(root))) {
     console.error("Not a git repository — semantic diff needs git for v0.1.");

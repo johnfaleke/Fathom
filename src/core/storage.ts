@@ -80,18 +80,33 @@ export function emptyWorkState(root: string): WorkState {
   };
 }
 
+export const DEFAULT_CONFIG: FathomConfig = {
+  version: 1,
+  ignore: ["node_modules", "dist", ".git", ".fathom", "coverage", ".next"],
+};
+
 export async function loadConfig(root: string): Promise<FathomConfig> {
-  const raw = await readFile(fathomPaths(root).config, "utf8");
-  return JSON.parse(raw) as FathomConfig;
+  try {
+    const raw = await readFile(fathomPaths(root).config, "utf8");
+    return JSON.parse(raw) as FathomConfig;
+  } catch {
+    return { ...DEFAULT_CONFIG };
+  }
 }
 
 export async function loadState(root: string): Promise<WorkState> {
-  const raw = await readFile(fathomPaths(root).state, "utf8");
-  return JSON.parse(raw) as WorkState;
+  try {
+    const raw = await readFile(fathomPaths(root).state, "utf8");
+    return JSON.parse(raw) as WorkState;
+  } catch {
+    return emptyWorkState(root);
+  }
 }
 
 export async function saveProjectModel(root: string, model: ProjectModel): Promise<void> {
-  await writeFile(fathomPaths(root).model, JSON.stringify(model, null, 2) + "\n", "utf8");
+  const paths = fathomPaths(root);
+  await mkdir(paths.dir, { recursive: true });
+  await writeFile(paths.model, JSON.stringify(model, null, 2) + "\n", "utf8");
 }
 
 export async function loadProjectModel(root: string): Promise<ProjectModel> {
@@ -101,8 +116,10 @@ export async function loadProjectModel(root: string): Promise<ProjectModel> {
 
 export async function saveState(root: string, state: WorkState): Promise<void> {
   state.updatedAt = new Date().toISOString();
+  const paths = fathomPaths(root);
+  await mkdir(paths.dir, { recursive: true });
   await writeFile(
-    fathomPaths(root).state,
+    paths.state,
     JSON.stringify(state, null, 2) + "\n",
     "utf8",
   );
@@ -112,12 +129,17 @@ export async function appendEvent(
   root: string,
   event: Record<string, unknown>,
 ): Promise<void> {
-  await appendFile(
-    fathomPaths(root).events,
-    JSON.stringify(event) + "\n",
-    "utf8",
-  );
+  try {
+    const paths = fathomPaths(root);
+    await mkdir(paths.dir, { recursive: true });
+    await appendFile(
+      paths.events,
+      JSON.stringify(event) + "\n",
+      "utf8",
+    );
+  } catch {}
 }
+
 
 export function applyFindings(state: WorkState, findings: Finding[]): WorkState {
   return {

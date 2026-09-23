@@ -15,15 +15,6 @@ export async function cmdStatus(
 ): Promise<number> {
   const root = path.resolve(cwd);
 
-  if (!(await isInitialized(root))) {
-    const msg = "Fathom is not initialized. Run `fathom init` first.";
-    if (opts.json) {
-      console.error(JSON.stringify({ error: msg }));
-    } else {
-      console.error(msg);
-    }
-    return 1;
-  }
 
   // If manual updates are provided, store them in state
   if (opts.current !== undefined || opts.completed !== undefined || opts.incomplete !== undefined) {

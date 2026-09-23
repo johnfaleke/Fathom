@@ -11,15 +11,6 @@ export async function cmdExplain(
 ): Promise<number> {
   const root = path.resolve(cwd);
 
-  if (!(await isInitialized(root))) {
-    const msg = "Fathom is not initialized. Run `fathom init` first.";
-    if (opts.json) {
-      console.error(JSON.stringify({ error: msg }));
-    } else {
-      console.error(msg);
-    }
-    return 1;
-  }
 
   const sounding = await takeProjectSounding(root);
 

@@ -73,8 +73,9 @@ export class FathomMCPServer {
           },
           serverInfo: {
             name: "fathom",
-            version: "0.5.0",
+            version: "0.6.0",
           },
+
         };
         return { jsonrpc: "2.0", id: req.id ?? null, result };
       }
