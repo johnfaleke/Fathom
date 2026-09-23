@@ -1,10 +1,11 @@
 # Fathom
 
-> Measure reality. Understand the change.
+> Git tells you what moved. Fathom tells you what it means.
 
-Current release: 0.5.0.
+Current release: 0.6.0.
 
-Fathom is an open-source, local-first CLI and MCP Server for Project Models and State Ledgers. It automatically reconstructs project reality, infers active objectives, groups changes into semantic software domains, deduces what is likely complete, builds static architecture graphs with circular dependency detection, and surfaces what doesn't line up with deterministic evidence.
+Fathom is an open-source, local-first software reality layer, CLI, and MCP Server. It automatically reconstructs project reality, infers active objectives, groups changes into semantic software domains, deduces what is likely complete, builds static architecture graphs with circular dependency detection, and surfaces cross-artifact drift with deterministic evidence.
+
 
 ## Canonical links
 
