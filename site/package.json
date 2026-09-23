@@ -1,0 +1,13 @@
+{
+  "name": "fathom-site",
+  "version": "1.0.0",
+  "description": "Fathom website with Vercel Web Analytics",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "echo 'Vercel Analytics installed successfully'"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}

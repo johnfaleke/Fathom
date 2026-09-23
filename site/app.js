@@ -1,4 +1,7 @@
 // Vercel Web Analytics custom event tracker
+// Package @vercel/analytics is installed (see package.json)
+// For static HTML sites, Vercel recommends the script tag approach (already in index.html)
+// This function provides a convenient wrapper for tracking custom events
 function trackEvent(name, data = {}) {
   if (typeof window.va === "function") {
     try {
