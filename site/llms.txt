@@ -1,0 +1,74 @@
+# Fathom
+
+> Git tells you what moved. Fathom tells you what it means.
+
+Current release: 0.6.0.
+
+Fathom is an open-source, local-first software reality layer, CLI, and MCP Server. It automatically reconstructs project reality, infers active objectives, groups changes into semantic software domains, deduces what is likely complete, builds static architecture graphs with circular dependency detection, and surfaces cross-artifact drift with deterministic evidence.
+
+
+## Canonical links
+
+- Repository: https://github.com/johnfaleke/Fathom
+- Issues: https://github.com/johnfaleke/Fathom/issues
+- Landing page: https://github.com/johnfaleke/Fathom/tree/main/site
+- License: MIT
+
+## Principles
+
+- Local-first: no account, cloud, or backend required.
+- Deep understanding: lightweight static AST extraction, architecture graphs, and cross-artifact checks (doc drift, test relationships, circular dependencies).
+- Evidence before opinion: deterministic checks and explainability with exact file and line coordinates.
+- MCP Native: live stdio server providing tools and resources directly to AI coding agents.
+- Privacy-aware: zero telemetry; automatic secret redaction and binary filtering before any external AI transmission.
+- CI/CD Gating: universal `--json`, exit codes (0/1/2), and GitHub Actions annotations.
+
+## Install and run
+
+Install the published package globally:
+
+```bash
+npm install --global @johnfaleke/fathom
+```
+
+Run from any project repository:
+
+```bash
+cd /path/to/project
+fathom init
+fathom status
+fathom explain FND-01
+fathom graph --format mermaid
+fathom check --format github
+```
+
+Launch the Model Context Protocol (MCP) stdio server:
+
+```bash
+fathom mcp
+```
+
+## MCP Endpoints
+
+- Tools:
+  - `fathom_status`: Inferred objective, semantic software map, completions, and findings.
+  - `fathom_explain`: Deterministic evidence breakdown and risk report for a finding ID.
+  - `fathom_graph`: Architecture graph with modules, edges, cycles, and orphans in JSON or Mermaid format.
+  - `fathom_check`: Verification checks for environment variables, documentation drift, and manifests.
+  - `fathom_scan`: Rebuilds `.fathom/model.json`.
+  - `fathom_diff`: Semantic project-level diff grouped by domain.
+- Resources:
+  - `fathom://sounding`: Live sounding JSON.
+  - `fathom://graph`: Codebase dependency topology and architecture graph.
+  - `fathom://model`: Project Model claim graph (`.fathom/model.json`).
+  - `fathom://state`: Local state snapshot (`.fathom/state.json`).
+  - `fathom://config`: Local configuration (`.fathom/config.json`).
+  - `fathom://events`: Append-only event history (`.fathom/events.jsonl`).
+
+## Automation & CI Gating
+
+- `--json`: Machine-readable JSON output on all commands.
+- `--format github`: Emits `::warning` and `::error` annotations on PR diffs.
+- `--format markdown`: Summary tables for PR descriptions.
+- `--max-attention <N>`: Fail build if unresolved attention items exceed threshold.
+- `--fail-on <severity>`: Fail build based on severity (`info`, `potential`, `warning`).
