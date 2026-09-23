@@ -75,25 +75,26 @@
 
       <section id="install" class="install-band">
         <div class="section-shell install-layout">
-          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Install once.<br /><em>Build the model.</em></h2><p>Install the CLI on your machine, then run it from any project workspace. Initialize each project once; its state stays local in <code>.fathom/</code>.</p><div class="install-flow"><div class="flow-step"><span>01</span><strong>Install globally or per project</strong><small>npm or npx</small></div><div class="flow-step"><span>02</span><strong>Take a project sounding</strong><small>Auto-inferred objective & map</small></div><div class="flow-step"><span>03</span><strong>Inspect evidence & gate CI</strong><small>fathom explain & exit codes</small></div><div class="flow-step"><span>04</span><strong>Connect MCP to agents</strong><small>Cursor, Claude, Antigravity</small></div></div><a class="inline-link" href="#docs" data-doc-tab="commands">Explore the full CLI & MCP reference <svg class="icon-inline" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 6v5.5H6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></a></div>
+          <div class="install-copy reveal"><p class="section-number">02 / FIRST READING</p><h2>Zero setup.<br /><em>Instant reality.</em></h2><p>Run directly with <code>npx</code> or install globally. Fathom works immediately on any repository without requiring manual configuration or state setup.</p><div class="install-flow"><div class="flow-step"><span>01</span><strong>Run directly or install</strong><small>npx or npm install -g</small></div><div class="flow-step"><span>02</span><strong>Take a project sounding</strong><small>Auto-inferred objective & map</small></div><div class="flow-step"><span>03</span><strong>Inspect evidence & gate CI</strong><small>fathom explain & exit codes</small></div><div class="flow-step"><span>04</span><strong>Connect MCP to agents</strong><small>Cursor, Claude, Windsurf</small></div></div><a class="inline-link" href="#docs" data-doc-tab="commands">Explore the full CLI & MCP reference <svg class="icon-inline" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 6v5.5H6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></a></div>
           <div class="code-stack reveal reveal-delay-2">
-            <div class="code-window"><div class="code-window-bar"><span class="window-dots"><span class="win-dot"></span><span class="win-dot"></span><span class="win-dot"></span></span><span>terminal</span></div><pre><code><span class="code-comment"># install globally once</span>
-<span class="code-command">npm install --global @johnfaleke/fathom</span>
+            <div class="code-window"><div class="code-window-bar"><span class="window-dots"><span class="win-dot"></span><span class="win-dot"></span><span class="win-dot"></span></span><span>terminal</span></div><pre><code><span class="code-comment"># run immediately on any repository</span>
+<span class="code-command">npx @johnfaleke/fathom</span>
 
-<span class="code-comment"># scan and check any workspace</span>
-<span class="code-command">cd /path/to/your-project</span>
-<span class="code-command">fathom init</span>
+<span class="code-comment"># or install globally</span>
+<span class="code-command">npm install --global @johnfaleke/fathom</span>
 <span class="code-command">fathom status</span>
 <span class="code-command">fathom explain FND-01</span>
+<span class="code-command">fathom graph</span>
 <span class="code-command">fathom check --format github</span>
 <span class="code-command">fathom diff</span>
 
 <span class="code-comment"># launch stdio MCP server for coding agents</span>
-<span class="code-command">fathom mcp</span></code></pre><button class="copy-button copy-code" data-copy="npm install --global @johnfaleke/fathom&#10;cd /path/to/your-project&#10;fathom init&#10;fathom status&#10;fathom explain FND-01&#10;fathom check --format github&#10;fathom diff&#10;fathom mcp">copy</button></div>
+<span class="code-command">fathom mcp</span></code></pre><button class="copy-button copy-code" data-copy="npx @johnfaleke/fathom&#10;fathom status&#10;fathom explain FND-01&#10;fathom graph&#10;fathom check --format github&#10;fathom diff&#10;fathom mcp">copy</button></div>
             <p class="install-alternative"><strong>Pin per project:</strong> <code>npm install --save-dev @johnfaleke/fathom</code> then run <code>npx fathom</code>.</p>
           </div>
         </div>
       </section>
+
 
       <section id="docs" class="section-shell section-pad docs-section">
         <div class="section-intro reveal">
@@ -160,10 +161,17 @@
                   </div>
                 </div>
                 <div class="command-row">
+                  <code>fathom graph</code>
+                  <div>
+                    <strong>Architecture graph & cycle detection</strong>
+                    <span>Visualizes dependency topology, module relationships, and circular import analysis. Supports <code>--format [text|json|mermaid]</code>.</span>
+                  </div>
+                </div>
+                <div class="command-row">
                   <code>fathom mcp</code>
                   <div>
                     <strong>Model Context Protocol stdio server</strong>
-                    <span>Connects AI coding assistants (Cursor, Claude Desktop, Antigravity) to live Fathom soundings and tools via MCP.</span>
+                    <span>Connects AI coding assistants (Cursor, Claude Desktop, Windsurf, VS Code Copilot) to live Fathom soundings and tools via MCP.</span>
                   </div>
                 </div>
                 <div class="command-row">
@@ -176,8 +184,8 @@
                 <div class="command-row">
                   <code>fathom init</code>
                   <div>
-                    <strong>Initialize workspace state</strong>
-                    <span>Creates local <code>.fathom/</code> directory, configuration, event history, and sample baseline.</span>
+                    <strong>Scaffold workspace config</strong>
+                    <span>Explicitly creates local <code>.fathom/</code> configuration, ignore rules, and sample environment baseline.</span>
                   </div>
                 </div>
                 <div class="command-row">
@@ -196,7 +204,7 @@
             <article id="checks" class="doc-block" role="tabpanel" aria-labelledby="tab-btn-checks">
               <div class="doc-header">
                 <div><p class="doc-kicker">02 / DETERMINISTIC CHECKS & CI GATING</p><h3>Checks you can explain to a teammate.</h3></div>
-                <p class="doc-summary">Zero hallucinations in verification. Fathom checks run with deterministic rules, produce machine-readable outputs, and integrate directly into GitHub Actions workflows.</p>
+                <p class="doc-summary">Deterministic verification. Evidence-backed findings. Fathom checks run with deterministic rules, produce machine-readable outputs, and integrate directly into GitHub Actions workflows.</p>
               </div>
               <div class="check-list">
                 <div class="check-item">
@@ -207,10 +215,24 @@
                   </div>
                 </div>
                 <div class="check-item">
+                  <span class="check-icon">DOC</span>
+                  <div>
+                    <strong>doc.env-undocumented</strong>
+                    <p>Catches documentation drift when environment variables or options are introduced without updating markdown documentation.</p>
+                  </div>
+                </div>
+                <div class="check-item">
                   <span class="check-icon">DEP</span>
                   <div>
                     <strong>deps.undeclared-import</strong>
                     <p>Finds third-party package imports in source code that are missing from <code>package.json</code> dependencies or manifests.</p>
+                  </div>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">TOPO</span>
+                  <div>
+                    <strong>architecture.dependency-topology</strong>
+                    <p>Analyzes static import relationships and flags circular import chains and orphaned internal modules.</p>
                   </div>
                 </div>
                 <div class="check-item">
@@ -240,9 +262,9 @@
                 <p class="doc-summary">The Project Model provides a structured, versioned representation of your codebase so tooling and agents can reason about reality rather than raw file dumps.</p>
               </div>
               <div class="schema-card">
-                <div class="schema-line"><span class="schema-key">"schemaVersion"</span><span>"0.3.0"</span></div>
-                <div class="schema-line"><span class="schema-key">"project.files"</span><span>184 tracked files</span></div>
-                <div class="schema-line"><span class="schema-key">"project.stack"</span><span>[ "TypeScript", "Node.js" ]</span></div>
+                <div class="schema-line"><span class="schema-key">"version"</span><span>1</span></div>
+                <div class="schema-line"><span class="schema-key">"project.files"</span><span>59 tracked files</span></div>
+                <div class="schema-line"><span class="schema-key">"project.stack"</span><span>[ "TypeScript", "JavaScript" ]</span></div>
                 <div class="schema-line"><span class="schema-key">"observations"</span><span>[ FilePresence, ManifestDependency, EnvVarRef ]</span></div>
                 <div class="schema-line"><span class="schema-key">"claims"</span><span>[ StackClaim, WiringClaim, CompletenessClaim ]</span></div>
                 <div class="schema-line"><span class="schema-key">"evidence"</span><span>[ Exact file paths, line ranges, commit hashes ]</span></div>
@@ -256,6 +278,7 @@
                 <button class="button button-outline doc-switch-btn" data-doc-target="ai">Next: MCP & Safe AI <svg class="icon-inline" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.5 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
               </div>
             </article>
+
 
             <article id="ai" class="doc-block" role="tabpanel" aria-labelledby="tab-btn-ai">
               <div class="doc-header">
