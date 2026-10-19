@@ -165,6 +165,8 @@ Agent finishes work ───►  fathom_check & fathom_explain
 - [Project Model Schema](docs/project-model.md)
 - [Deterministic Checks Catalog](docs/checks.md)
 - [Model Context Protocol (MCP)](docs/mcp.md)
+- [Configuration Guidance](docs/configuration.md)
+- [AI Provider Interface](docs/ai-provider.md)
 - [Extending Fathom](docs/extending-fathom.md)
 - [Contributing Guide](CONTRIBUTING.md)
 
