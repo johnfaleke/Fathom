@@ -100,9 +100,11 @@ async function main(): Promise<void> {
         incomplete: statusOptions.incomplete,
       });
       break;
-    case "explain":
-      process.exitCode = await cmdExplain(process.cwd(), args[1], { json });
+    case "explain": {
+      const targetId = args.slice(1).find((arg) => !arg.startsWith("-"));
+      process.exitCode = await cmdExplain(process.cwd(), targetId, { json });
       break;
+    }
     case "graph":
       process.exitCode = await runGraphCommand(process.cwd(), {
         json,

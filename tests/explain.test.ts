@@ -96,3 +96,32 @@ test("CLI explain command outputs finding details and coordinates", async () => 
   assert.equal(parsed.riskLevel, "high");
   assert.ok(parsed.evidence.some((e: any) => e.path === "src/index.ts"));
 });
+
+test("CLI explain --json on clean workspace returns valid JSON message", async () => {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "fathom-explain-clean-"));
+  mkdirSync(path.join(tempDir, "src"), { recursive: true });
+
+  writeFileSync(
+    path.join(tempDir, "package.json"),
+    JSON.stringify({ name: "fixture-explain-clean", version: "1.0.0" }, null, 2),
+  );
+  writeFileSync(path.join(tempDir, "src", "index.ts"), "console.log('clean');\n");
+
+  await execFileAsync(process.execPath, [cliPath, "init"], {
+    cwd: tempDir,
+    env: process.env,
+  });
+
+  const { stdout } = await execFileAsync(
+    process.execPath,
+    [cliPath, "explain", "--json"],
+    {
+      cwd: tempDir,
+      env: process.env,
+    },
+  );
+
+  const parsed = JSON.parse(stdout);
+  assert.equal(parsed.message, "No active findings to explain.");
+});
+
