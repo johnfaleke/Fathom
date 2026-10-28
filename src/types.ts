@@ -8,6 +8,8 @@ export type Severity = "info" | "warning" | "potential";
 export interface Evidence {
   kind: string;
   path?: string;
+  /** One-based source line, when the evidence identifies a specific location. */
+  line?: number;
   detail: string;
 }
 

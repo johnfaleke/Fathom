@@ -9,7 +9,7 @@ const CODE_EXT = /\.(?:[cm]?[jt]sx?|mjs|cjs)$/;
 export const envVarCheck: Check = {
   id: "config.env-var-missing",
   async run(ctx: ProjectContext): Promise<Finding[]> {
-    const used = new Map<string, Set<string>>();
+    const used = new Map<string, Map<string, { line: number; detail: string }>>();
 
     for (const file of ctx.files) {
       if (!CODE_EXT.test(file)) continue;
@@ -20,11 +20,17 @@ export const envVarCheck: Check = {
       const text = await ctx.readText(file);
       if (!text) continue;
 
-      for (const match of text.matchAll(ENV_ACCESS)) {
-        const name = match[1] ?? match[2];
-        if (!name) continue;
-        if (!used.has(name)) used.set(name, new Set());
-        used.get(name)!.add(file);
+      for (const [index, line] of text.split(/\r\n|\r|\n/).entries()) {
+        for (const match of line.matchAll(ENV_ACCESS)) {
+          const name = match[1] ?? match[2];
+          if (!name) continue;
+          if (!used.has(name)) used.set(name, new Map());
+          // Keep the first occurrence per file, retaining the existing file limit.
+          const locations = used.get(name)!;
+          if (!locations.has(file)) {
+            locations.set(file, { line: index + 1, detail: match[0] });
+          }
+        }
       }
     }
 
@@ -38,7 +44,7 @@ export const envVarCheck: Check = {
     for (const [name, files] of used) {
       if (documented.has(name)) continue;
 
-      const fileList = [...files].sort();
+      const fileList = [...files.keys()].sort();
       findings.push({
         id: "config.env-var-missing",
         category: "configuration",
@@ -49,11 +55,12 @@ export const envVarCheck: Check = {
             kind: "env-usage",
             detail: `Referenced in ${fileList.length} file(s)`,
             path: fileList[0],
+            line: files.get(fileList[0])!.line,
           },
           ...fileList.slice(0, 5).map((path) => ({
             kind: "source",
             path,
-            detail: `process.env.${name}`,
+            ...files.get(path)!,
           })),
           {
             kind: "missing-doc",

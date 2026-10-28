@@ -1,6 +1,11 @@
 import type { AIInterpretationResult } from "../ai/provider.js";
 import type { SafeAIContext } from "../ai/context.js";
-import type { Finding, FindingExplanation, ProjectSounding, WorkState } from "../types.js";
+import type { Evidence, Finding, FindingExplanation, ProjectSounding, WorkState } from "../types.js";
+
+function evidenceLocation(evidence: Evidence): string | undefined {
+  if (!evidence.path) return undefined;
+  return evidence.line === undefined ? evidence.path : `${evidence.path}:${evidence.line}`;
+}
 
 export function renderInterpretation(result: AIInterpretationResult, context: SafeAIContext): string {
   const lines = [
@@ -38,7 +43,7 @@ export function renderFindings(findings: Finding[]): string {
     lines.push(`${mark} ${titleCase(f.category)}`);
     lines.push(wrapMessage(f.message));
     for (const e of f.evidence.slice(0, 3)) {
-      const loc = e.path ? `  ${e.path}: ` : "  ";
+      const loc = e.path ? `  ${evidenceLocation(e)}: ` : "  ";
       lines.push(`${loc}${e.detail}`);
     }
     lines.push("");
@@ -156,7 +161,8 @@ export function renderGitHubAnnotations(findings: Finding[]): string {
     const title = titleCase(f.category);
 
     const fileAttr = filePath ? ` file=${filePath},` : " ";
-    lines.push(`::${level}${fileAttr}title=${title}::${f.message.replace(/\r?\n/g, " ")}`);
+    const lineAttr = filePath && primaryEvidence?.line !== undefined ? `line=${primaryEvidence.line},` : "";
+    lines.push(`::${level}${fileAttr}${lineAttr}title=${title}::${f.message.replace(/\r?\n/g, " ")}`);
   }
 
   return lines.join("\n") + "\n";
@@ -184,7 +190,7 @@ export function renderMarkdownSummary(
     lines.push(`## Findings (${findings.length})`, ``, `| Severity | Check ID | Message | Evidence |`, `| --- | --- | --- | --- |`);
     for (const f of findings) {
       const badge = f.severity === "warning" ? "⚠️ Warning" : f.severity === "potential" ? "🔍 Potential" : "ℹ️ Info";
-      const ev = f.evidence.map((e) => (e.path ? `\`${e.path}\`: ${e.detail}` : e.detail)).join("<br/>");
+      const ev = f.evidence.map((e) => (e.path ? `\`${evidenceLocation(e)}\`: ${e.detail}` : e.detail)).join("<br/>");
       lines.push(`| ${badge} | \`${f.id}\`<br/>*${titleCase(f.category)}* | ${f.message} | ${ev || "—"} |`);
     }
     lines.push(``);
@@ -260,7 +266,7 @@ export function renderSounding(sounding: ProjectSounding): string {
       const mark = f.severity === "potential" ? "○" : "⚠";
       lines.push(`${mark} [${f.code}] ${f.message}`);
       for (const e of f.evidence.slice(0, 2)) {
-        const loc = e.path ? `      ${e.path}: ` : "      ";
+        const loc = e.path ? `      ${evidenceLocation(e)}: ` : "      ";
         lines.push(`${loc}${e.detail}`);
       }
     }
@@ -299,7 +305,7 @@ export function renderExplanation(exp: FindingExplanation): string {
   ];
 
   for (const e of exp.evidence) {
-    const loc = e.path ? `  • ${e.path}: ` : "  • ";
+    const loc = e.path ? `  • ${evidenceLocation(e)}: ` : "  • ";
     lines.push(`${loc}${e.detail}`);
   }
   lines.push("");
