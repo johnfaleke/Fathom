@@ -73,7 +73,7 @@ test("CLI explain command outputs finding details and coordinates", async () => 
 
   writeFileSync(
     path.join(tempDir, "src", "index.ts"),
-    "const key = process.env.PAYMENT_GATEWAY_KEY;\nconsole.log(key);\n",
+    "// Configuration\n\nconst key = process.env.PAYMENT_GATEWAY_KEY;\nconsole.log(key);\n",
   );
 
   await execFileAsync(process.execPath, [cliPath, "init"], {
@@ -94,7 +94,14 @@ test("CLI explain command outputs finding details and coordinates", async () => 
   assert.equal(parsed.code, "FND-01");
   assert.equal(parsed.category, "configuration");
   assert.equal(parsed.riskLevel, "high");
-  assert.ok(parsed.evidence.some((e: any) => e.path === "src/index.ts"));
+  assert.ok(parsed.evidence.some((e: any) => e.kind === "source" && e.path === "src/index.ts" && e.line === 3));
+  assert.ok(parsed.evidence.some((e: any) => e.path === ".env.example" && e.line === undefined));
+
+  const explained = await execFileAsync(process.execPath, [cliPath, "explain", "FND-01"], { cwd: tempDir });
+  assert.match(explained.stdout, /src\/index\.ts:3: process\.env\.PAYMENT_GATEWAY_KEY/);
+  assert.match(explained.stdout, /\.env\.example: PAYMENT_GATEWAY_KEY is not listed/);
+  const status = await execFileAsync(process.execPath, [cliPath, "status"], { cwd: tempDir });
+  assert.match(status.stdout, /src\/index\.ts:3:/);
 });
 
 test("CLI explain --json on clean workspace returns valid JSON message", async () => {

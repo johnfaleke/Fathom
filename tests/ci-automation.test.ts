@@ -117,6 +117,8 @@ test("check --format github outputs GitHub Actions workflow commands", async () 
   assert.match(stdout, /::warning/);
   assert.match(stdout, /title=Dependencies/);
   assert.match(stdout, /title=Configuration/);
+  assert.match(stdout, /::warning file=src\/index\.ts,line=2,title=Configuration::/);
+  assert.match(stdout, /src\/index\.ts:2: process\.env\.SECRET_KEY/);
 });
 
 test("check --format markdown outputs formatted report table", async () => {
@@ -152,6 +154,7 @@ test("check --format markdown outputs formatted report table", async () => {
   assert.match(stdout, /# Fathom Report/);
   assert.match(stdout, /\| Severity \| Check ID \| Message \| Evidence \|/);
   assert.match(stdout, /config\.env-var-missing/i);
+  assert.match(stdout, /`src\/index\.ts:1`: process\.env\.API_ENDPOINT/);
 });
 
 test("check CI gating with --max-attention and --fail-on", async () => {

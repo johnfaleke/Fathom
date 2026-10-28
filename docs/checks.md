@@ -9,6 +9,14 @@ Fathom runs cross-artifact verification checks without LLM hallucinations. Every
 - **`config.env-var-missing`**: Catches `process.env.VARIABLE` references in source code that are missing from `.env.example`.
 - **`doc.env-undocumented`**: Catches environment variables referenced in source code that are not documented in any markdown files or documentation.
 
+For `config.env-var-missing`, source evidence includes a one-based `line` and the
+matched access (including bracket notation). It keeps the first occurrence per
+file, with source evidence for up to five files in path order. Terminal and
+Markdown reports show `path:line`; GitHub annotations use the same location.
+JSON retains separate `path` and `line` fields. Missing `.env.example` evidence
+has no line because it describes an absent file or key, rather than a source
+location. `fathom explain <id>` shows both sides of the finding.
+
 ---
 
 ## 2. Dependency Checks
